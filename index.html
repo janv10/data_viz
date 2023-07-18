@@ -1,158 +1,1051 @@
-<!doctype html>
-<html>
-  <head>
-    <title>Netflix - Interactive Analysis</title>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>D3.js Project</title>
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+			crossorigin="anonymous"
+		/>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+			crossorigin="anonymous"
+		></script>
+		<script src="https://d3js.org/d3.v4.min.js"></script>
+		<script src="//d3js.org/d3-scale-chromatic.v0.3.min.js"></script>
 
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 20px;
-      }
+		<link
+			href="https://fonts.googleapis.com/css?family=Open+Sans:400, 700"
+			rel="stylesheet"
+		/>
+	<style>body {
+    margin: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
   
-      .chart {
-        width: 600px;
-        height: 600px;
-        background-color: #f7f7f7;
-        border: 1px solid #ccc;
-        border: 1px solid #f7f7f7;
-        display: none;
-      }
-
-      
+  .x-axis path,
+  .y-axis path {
+    display: none;
+  }
   
-      .active {
-        display: block;
-      }
+  .rank-line {
+    fill: none;
+    stroke: black;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
   
-      .button-container {
-        margin-bottom: 10px;
-      }
+  .start-dot,
+  .end-dot {
+    fill: grey;
+  }
   
-      .button {
-        padding: 10px 20px;
-        font-size: 16px;
-        font-weight: bold;
-        border: none;
-        border-radius: 5px;
-        background-color: #4CAF50;
-        color: #fff;
-        cursor: pointer;
-        margin-right: 10px;
-      }
-    </style>
+  .tooltip text {
+    font-size: 14px;
+    font-weight: 700;
+    fill: black;
+  }
+  
+  .x-axis text {
+    font-size: 20px;
+    font-weight: 700;
+  }
+  
+  .y-axis text {
+    font-weight: 700;
+  }
+  
+  text {
+    text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+    font-family: 'Open Sans', sans-serif;
+    opacity: 0.7;
+    font-size: 14px;
+  }
+  
+  .y-label {
+    fill: black;
+    font-size: 18px;
+    font-weight: 700;
+  }
+  
+  .voronoi path {
+    fill: none;
+    pointer-events: all;
+  }
+  
+  .grid-line {
+    stroke: black;
+    opacity: 0.2;
+    stroke-dasharray: 2, 2;
+  }
+  
+  .end-label {
+    font-size: 14px;
+    font-weight: 700;
+    fill: black;
+    fill-opacity: 0.7;
+  }
+  
+  #chart-container {
+    width: 100%;
+    height: 100%;
+  }
+  
+  polyline {
+    opacity: 0.3;
+    stroke: black;
+    stroke-width: 2px;
+    fill: none;
+  }
+  
+  .labelValue {
+    font-size: 60%;
+    opacity: 0.5;
+  }
+  
+  .toolTip {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    position: absolute;
+    display: none;
+    width: auto;
+    height: auto;
+    background: none repeat scroll 0 0 white;
+    border: 0 none;
+    border-radius: 8px 8px 8px 8px;
+    box-shadow: -3px 3px 15px #888888;
+    color: black;
+    font: 12px sans-serif;
+    padding: 5px;
+    text-align: center;
+  }
+  
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+  }
+  
+  .x.axis path {
+    display: none;
+  }
+  
+  .container {
+    padding-top: 25px;
+  }
+  
+  #chart-instructions {
+    text-align: right;
+    padding-top: 5px;
+  }
+  
+  #chart-title {
+    text-align: center;
+  }
+  
+  #chart-title p {
+    margin-bottom: 0;
+  }
+  
+  #dog-card {
+    position: fixed;
+    width: 25vw;
+    /* height: 10vh; */
+    left: 0;
+    bottom: 50vh;
+    padding-top: 5px;
+    box-shadow: 0 -5px 15px lightgray;
+    transform: translateX(-24vw);
+    transition: transform 0.5s;
+    transition-delay: 0.15s;
+    border-top: 1px dashed black;
+    background-color: #0d6efd;
+    color: white;
+    z-index: 9999;
+  }
+  
+  #dog-card:hover {
+    transition: transform 0.5s;
+    transform: translateX(0vw);
+  }
+  
+  #doggy-details a {
+    color: white;
+  }
+  
+  #doggy-details a:hover {
+    color: black;
+  }
+  
+  #elips {
+    position: absolute;
+    right: 0.25vw;
+  }</style>
 
-
-  </head>
-  <body>
-    <h1 class="display-4"> Let's explore Netflix!</h1>
-    <div class="button-container">
-      <button class="button" onclick="showChart(1)">1</button>
-      <button class="button" onclick="showChart(2)">2</button>
-      <button class="button" onclick="showChart(3)">3</button>
-      <button class="button" onclick="showChart(4)">4</button>
-    </div>
-    <div class="chart" id="chart1"></div>
-    <div class="chart" id="chart2"></div>
-    <div class="chart" id="chart3"></div>
-    <div class="chart" id="chart4"></div>
-
-    <script src="https://d3js.org/d3.v7.min.js"></script>
+	<script>
+		let currentPage;
+		const handlePrevious = () => {
+			if (currentPage === 1) {
+				return;
+			}
+			document.querySelector(`#dog-nav-${currentPage - 1}`).click();
+		};
+		const handleNext = () => {
+			if (currentPage === 4) {
+				return;
+			}
+			document.querySelector(`#dog-nav-${currentPage + 1}`).click();
+		};
+	</script>
   <script>
-    // Show the specified chart based on the button click
-    function showChart(chartNumber) {
-      // Hide all charts
-      d3.selectAll('.chart').style('display', 'none');
+const showPie = () => {
+	if (!document.querySelector('#dog-nav-1').classList.contains('active')) {
+		d3.select('svg').remove();
+	}
 
-      // Show the selected chart
-      const selectedChart = d3.select(`#chart${chartNumber}`);
-      selectedChart.style('display', 'block');
+	if (currentPage === 1) {
+		return;
+	}
 
-      // Generate the chart content based on the selected chart number
-      generateChartContent(selectedChart, chartNumber);
-    }
+	document.querySelector('.active').classList.remove('active');
+	document.querySelector('#dog-nav-1').classList.add('active');
+	document.querySelector('#dog-nav-1').classList.add('active-disabled');
+	document.querySelector('#dog-nav-prev').classList.add('disabled');
+	document.querySelector('#dog-nav-next').classList.remove('disabled');
+	document.querySelector('#doggy-details').innerHTML =
+		"<p>Research on canine psychology by Stanley Coren, a professor at Univ. of BC, was conducted to determine if a breed's intelligence was correlated to its size.</p><p>Breeds were tested and grouped into categories to describe their intelligence. The criteria for which was measured by the number of repetitions it took for a dog to understand a new command, as well as the rate at which a breed would respond to a known command the first time it was given.</p>";
+	let chartTitle = document.querySelector('#chart-title');
+	chartTitle.innerHTML =
+		'<h1 class="display-6">Breed Intelligence by Group</h1><p class="text-muted">Hover over pie slices to view additional information.</p>';
 
-    // Generate the content for each chart based on the chart number
-    function generateChartContent(chart, chartNumber) {
-      // Clear existing content
-      chart.html('');
+	const width = 1260,
+		height = 960,
+		radius = 350,
+		legendRectSize = radius * 0.05,
+		legendSpacing = radius * 0.02;
 
+	const div = d3.select('body').append('div').attr('class', 'toolTip');
 
-      // Generate content based on the chart number
-      switch (chartNumber) {
-        case 1:
-          chart.append('p').text('Pie Chart');
+	const svg = d3
+		.select('#chart-container')
+		.append('svg')
+		.attr('width', width)
+		.attr('height', height)
+		.append('g')
+		.attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
 
-          // Load the data from the CSV file
-          d3.csv('netflix_titles_nov_2019.csv').then(function(data) {
-            // Extract the "type" field
-            const types = data.map(d => d.type);
+	d3.csv('dog_intelligence.csv', (err, data) => {
+		if (err) throw err;
 
-            // Count the occurrences of each category
-            const counts = {};
-            types.forEach(function(type) {
-              counts[type] = (counts[type] || 0) + 1;
-            });
+		const ordScale = d3
+			.scaleOrdinal()
+			.domain([
+				'Brightest Dogs',
+				'Excellent Working Dogs',
+				'Above Average Working Dogs',
+				'Average Working Dogs',
+				'Fair Working Dogs',
+				'Lowest Degree of Working Dogs',
+			])
+			.range(d3.schemePaired);
+		const pie = d3.pie().value(() => data.length);
+		const arc = svg.selectAll('arc').data(pie(data)).enter();
+		const path = d3.arc().outerRadius(radius).innerRadius(200);
+		arc
+			.append('path')
+			.attr('d', path)
+			.attr('fill', d => ordScale(d.data.classification))
+			.attr('stroke', 'white')
+			.style('stroke-width', '0.15px')
+			.style('opacity', '0.55');
 
-            // Convert counts object to an array of objects
-            const categoryCounts = Object.keys(counts).map(function(type) {
-              return { type, count: counts[type] };
-            });
+		const slice = svg
+			.selectAll('path')
+			.data(pie(data))
+			.attr('class', (d, i) => `slice-${i}`);
 
-            // Create the pie chart
-            const width = 400;
-            const height = 400;
-            const radius = Math.min(width, height) / 2;
+		slice.on('mouseover', (d, i) => {
+			d3.select(`.slice-${i}`)
+				.style('opacity', '1')
+				.style('transform', 'scale(1.05)');
+		});
 
-            const color = d3.scaleOrdinal()
-              .domain(categoryCounts.map(d => d.type))
-              .range(d3.schemeCategory10);
+		slice.on('mousemove', d => {
+			div.style('left', d3.event.pageX + 40 + 'px');
+			div.style('top', d3.event.pageY - 75 + 'px');
+			div.style('display', 'inline-block');
+			div.style('background-color', 'rgba(255,255,255,0.9)');
+			div.style('padding', '25px 10px 0 10px');
+			div.html(`
+        <h6 class='tooltip-title'>${d.data.breed}</h6>
+				<hr/>
+        <p>Responds to first command with <b>${
+					d.data.obey * 100
+				}%</b> probability.</p>
+        <p><b>${d.data.reps_lower}</b> to <b>${
+				d.data.reps_upper
+			}</b> repetitions to understand a new command.</p>
+      `);
+		});
 
-            const pie = d3.pie()
-              .value(d => d.count)
-              .sort(null);
+		slice.on('mouseout', (d, i) => {
+			d3.select(`.slice-${i}`)
+				.style('opacity', '0.55')
+				.style('transform', 'scale(1)');
+			div.style('display', 'none');
+		});
 
-            const arc = d3.arc()
-              .innerRadius(0)
-              .outerRadius(radius);
+		slice.exit().remove();
 
-            const svg = chart.append('svg')
-              .attr('width', width)
-              .attr('height', height)
-              .append('g')
-              .attr('transform', `translate(${width / 2}, ${height / 2})`);
+		const legend = svg
+			.selectAll('.legend')
+			.data(ordScale.domain())
+			.enter()
+			.append('g')
+			.attr('class', 'legend')
+			.attr('transform', (d, i) => {
+				let height = legendRectSize + legendSpacing;
+				let offset = (height * ordScale.domain().length) / 2;
+				let horizontal = -6 * legendRectSize;
+				let vertical = i * height - offset;
+				return `translate(${horizontal}, ${vertical})`;
+			});
 
-            const arcs = svg.selectAll('arc')
-              .data(pie(categoryCounts))
-              .enter()
-              .append('g');
+		legend
+			.append('rect')
+			.attr('width', legendRectSize)
+			.attr('height', legendRectSize)
+			.style('fill', ordScale)
+			.style('opacity', '0.55')
+			.style('stroke', ordScale);
 
-            arcs.append('path')
-              .attr('d', arc)
-              .attr('fill', d => color(d.data.type));
+		legend
+			.append('text')
+			.attr('x', legendRectSize + legendSpacing)
+			.attr('y', legendRectSize - legendSpacing)
+			.text(d => d);
+	});
+	currentPage = 1;
+};
 
-            arcs.append('text')
-              .attr('transform', d => `translate(${arc.centroid(d)})`)
-              .attr('text-anchor', 'middle')
-              .text(d => `${d.data.type}: ${d.data.count}`);
-          });
-          break;
+showPie();
 
-
-          
-        case 2:
-          chart.append('p').text('Content Over the Years');
-          break;
-        case 3:
-          chart.append('p').text('Content from different countries');
-          break;
-        case 4:
-          chart.append('p').text('Top Categories');
-          break;
-        default:
-          chart.append('p').text('No chart content available');
-      }
-    }
   </script>
-  </body>
+
+
+<script>const showScatter = () => {
+	if (!document.querySelector('#dog-nav-4').classList.contains('active')) {
+		d3.select('svg').remove();
+	}
+
+	if (currentPage === 4) {
+		return;
+	}
+
+	document.querySelector('.active').classList.remove('active');
+	document.querySelector('#dog-nav-4').classList.add('active');
+	document.querySelector('#dog-nav-prev').classList.remove('disabled');
+	document.querySelector('#dog-nav-next').classList.add('disabled');
+	document.querySelector('#doggy-details').innerHTML =
+		"<p>After analysis, while the professor's hypothesis was initially rejected, it was later accepted as potentially having significance.</p><p>That said, through visualizing the data points collected and displayed through this series of charts, it does not seem apparently clear whether or not there is, in fact, a correlation between breed size and breed intelligence.</p><p>As such... it would appear size <strong>DOES NOT</strong> matter.</p>";
+	let chartTitle = document.querySelector('#chart-title');
+	chartTitle.innerHTML =
+		'<h1 class="display-6">Breed Size vs Breed Intelligence</h1><p class="text-muted">Click and drag regions to zoom and view breeds. Double-click to reset.</p>';
+	chartTitle.style.marginBottom = '0';
+
+	const margin = { top: 50, right: 200, bottom: 100, left: 125 };
+
+	const width = 1260 - margin.left - margin.right,
+		height = 960 - margin.top - margin.bottom;
+
+	const svg = d3
+		.select('#chart-container')
+		.append('svg')
+		.attr('width', width + margin.left + margin.right)
+		.attr('height', height + margin.top + margin.bottom)
+		.append('g')
+		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+	d3.csv('breed_size_and_intelligence.csv', data => {
+		const x = d3.scaleLinear().domain([0, 110]).range([0, width]).nice();
+		const y = d3.scaleLinear().domain([0, 40]).range([height, 0]);
+
+		const xAxis = d3.axisBottom(x),
+			yAxis = d3.axisLeft(y);
+
+		let brush = d3
+				.brush()
+				.extent([
+					[0, 0],
+					[width, height],
+				])
+				.on('end', brushended),
+			idleTimeout,
+			idleDelay = 350;
+
+		const clip = svg
+			.append('defs')
+			.append('svg:clipPath')
+			.attr('id', 'clip')
+			.append('svg:rect')
+			.attr('width', width)
+			.attr('height', height)
+			.attr('x', 0)
+			.attr('y', 0);
+
+		const color = d3
+			.scaleOrdinal()
+			.domain([
+				'Brightest Dogs',
+				'Excellent Working Dogs',
+				'Above Average Working Dogs',
+				'Average Working Dogs',
+				'Fair Working Dogs',
+				'Lowest Degree of Working Dogs',
+			])
+			.range(d3.schemePaired);
+
+		const scatter = svg
+			.append('g')
+			.attr('id', 'scatterplot')
+			.attr('clip-path', 'url(#clip)');
+
+		scatter
+			.selectAll('.dot')
+			.data(data)
+			.enter()
+			.append('circle')
+			.attr('class', 'dot')
+			.attr('r', 4)
+			.attr('cx', d => x(d.reps))
+			.attr('cy', d => y(d.height))
+			.attr('r', 6)
+			.attr('opacity', 0.5)
+			.style('fill', d => color(d.classification));
+
+		scatter
+			.selectAll('.dot-label')
+			.data(data)
+			.enter()
+			.append('text')
+			.text(d => d.breed)
+			.attr('x', d => x(d.reps) + 10)
+			.attr('y', d => y(d.height) + 5)
+			.style('opacity', 0)
+			.style('transition', 'opacity 0.25s')
+			.style('transition-delay', '0.25s');
+
+		svg
+			.append('g')
+			.attr('id', 'axis--x')
+			.attr('transform', 'translate(0,' + height + ')')
+			.call(d3.axisBottom(x));
+
+		svg
+			.append('text')
+			.style('text-anchor', 'end')
+			.attr('x', width)
+			.attr('y', height - 8)
+			.text('Repetitions');
+
+		svg.append('g').attr('id', 'axis--y').call(d3.axisLeft(y));
+
+		svg
+			.append('text')
+			.attr('transform', 'rotate(-90)')
+			.attr('y', 6)
+			.attr('dy', '1em')
+			.style('text-anchor', 'end')
+			.text('Height');
+
+		scatter.append('g').attr('class', 'brush').call(brush);
+
+		function brushended() {
+			var s = d3.event.selection;
+			if (!s) {
+				if (!idleTimeout) return (idleTimeout = setTimeout(idled, idleDelay));
+				x.domain([0, 110]);
+				y.domain([0, 40]);
+				scatter.selectAll('text').style('opacity', 0);
+				legend.style('opacity', 1);
+			} else {
+				x.domain([s[0][0], s[1][0]].map(x.invert, x));
+				y.domain([s[1][1], s[0][1]].map(y.invert, y));
+				scatter.selectAll('text').style('opacity', 1);
+				scatter.select('.brush').call(brush.move, null);
+				legend
+					.style('opacity', 0)
+					.style('transition', 'opacity 0.75s')
+					.style('transition-delay', '0.25s');
+			}
+			zoom();
+		}
+
+		function idled() {
+			idleTimeout = null;
+		}
+
+		function zoom() {
+			var t = scatter.transition().duration(750);
+			svg.select('#axis--x').transition(t).call(xAxis);
+			svg.select('#axis--y').transition(t).call(yAxis);
+			scatter
+				.selectAll('circle')
+				.transition(t)
+				.attr('cx', d => x(d.reps))
+				.attr('cy', d => y(d.height));
+			scatter
+				.selectAll('text')
+				.transition(t)
+				.attr('x', d => x(d.reps) + 10)
+				.attr('y', d => y(d.height) + 5);
+		}
+
+		const legend = svg
+			.append('g')
+			.attr('font-family', 'sans-serif')
+			.attr('font-size', 10)
+			.attr('text-anchor', 'end')
+			.selectAll('g')
+			.data(color.domain())
+			.enter()
+			.append('g')
+			.attr('transform', (d, i) => 'translate(0,' + i * 20 + ')');
+
+		legend
+			.append('rect')
+			.attr('x', width - 19)
+			.attr('width', 19)
+			.attr('height', 19)
+			.attr('fill', color);
+
+		legend
+			.append('text')
+			.attr('x', width - 24)
+			.attr('y', 9.5)
+			.attr('dy', '0.32em')
+			.text(d => d);
+	});
+	currentPage = 4;
+};</script>
+
+<script>const showTrendLines = () => {
+	if (!document.querySelector('#dog-nav-2').classList.contains('active')) {
+		d3.select('svg').remove();
+	}
+
+	if (currentPage === 2) {
+		return;
+	}
+
+	document.querySelector('.active').classList.remove('active');
+	document.querySelector('#dog-nav-2').classList.add('active');
+	document.querySelector('#dog-nav-prev').classList.remove('disabled');
+	document.querySelector('#dog-nav-next').classList.remove('disabled');
+	document.querySelector('#doggy-details').innerHTML =
+		"<p>The American Kennel Club (AKC) carries out hundreds of breed inspections each year to determine breed rankings.</p><p>These ranks are archived and added, annually, on the AKC website, <a href='https://www.akc.org/' target='_blank'>www.akc.org</a>. The ranks above were tracked from 2014 to 2018.</p>";
+	let chartTitle = document.querySelector('#chart-title');
+	chartTitle.innerHTML =
+		'<h1 class="display-6">Top 10 Breeds</h1><p class="text-muted">Hover over lines to highlight ranks by year.</p>';
+	chartTitle.style.marginBottom = '0';
+
+	const margin = { top: 50, right: 200, bottom: 100, left: 125 };
+
+	const width = 1260 - margin.left - margin.right,
+		height = 960 - margin.top - margin.bottom;
+
+	const svg = d3
+		.select('#chart-container')
+		.append('svg')
+		.attr('width', width + margin.left + margin.right)
+		.attr('height', height + margin.top + margin.bottom)
+		.append('g')
+		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+	d3.csv('dog_breeds_top_10.csv', (err, data) => {
+		if (err) throw err;
+
+		const cfg = {
+			strokeWidth: 5,
+		};
+
+		const color = d3.scaleOrdinal(d3.schemePaired);
+
+		const highlight = [
+			'Labrador Retriever',
+			'German Shepherd',
+			'Golden Retriever',
+			'French Bulldog',
+			'Bulldog',
+		];
+
+		svg
+			.append('defs')
+			.append('clipPath')
+			.attr('id', 'clip')
+			.append('rect')
+			.attr('width', width)
+			.attr('height', height + cfg.strokeWidth);
+
+		const x = d3.scaleLinear().range([0, width]);
+
+		const y = d3.scaleLinear().range([0, height]);
+
+		const voronoi = d3
+			.voronoi()
+			.x(d => x(d.year))
+			.y(d => y(d.rank))
+			.extent([
+				[-margin.left / 2, -margin.top / 2],
+				[width + margin.right / 2, height + margin.bottom / 2],
+			]);
+
+		const line = d3
+			.line()
+			.x(d => x(d.year))
+			.y(d => y(d.rank));
+
+		const parsedData = [];
+		data.forEach(d => {
+			var dObj = { breed: d.breed, ranks: [] };
+			for (let year in d) {
+				if (year != 'breed') {
+					if (d[year] != 0) {
+						dObj.ranks.push({
+							year: +year,
+							rank: +d[year],
+							breed: dObj,
+						});
+					}
+				}
+			}
+			parsedData.push(dObj);
+		});
+
+		const xTickNo = parsedData[0].ranks.length;
+		x.domain(d3.extent(parsedData[0].ranks, d => d.year));
+
+		color.domain(data.map(d => d.breed));
+
+		var ranks = 10;
+		y.domain([0.5, 12.5]);
+
+		const axisMargin = 20;
+
+		var xAxis = d3
+			.axisBottom(x)
+			.tickFormat(d3.format('d'))
+			.ticks(xTickNo)
+			.tickSize(0);
+
+		var yAxis = d3.axisLeft(y).ticks(ranks).tickSize(0);
+
+		var xGroup = svg.append('g');
+		var xAxisElem = xGroup
+			.append('g')
+			.attr('transform', 'translate(' + [0, height + axisMargin * 1.2] + ')')
+			.attr('class', 'x-axis')
+			.call(xAxis);
+
+		xGroup
+			.append('g')
+			.selectAll('line')
+			.data(x.ticks(xTickNo))
+			.enter()
+			.append('line')
+			.attr('class', 'grid-line')
+			.attr('y1', 0)
+			.attr('y2', height + 10)
+			.attr('x1', d => x(d))
+			.attr('x2', d => x(d));
+
+		var yGroup = svg.append('g');
+		var yAxisElem = yGroup
+			.append('g')
+			.attr('transform', 'translate(' + [-axisMargin, 0] + ')')
+			.attr('class', 'y-axis')
+			.call(yAxis);
+		yAxisElem
+			.append('text')
+			.attr('class', 'y-label')
+			.attr('text-anchor', 'middle')
+			.attr(
+				'transform',
+				'rotate(-90) translate(' + [-height / 2, -margin.left / 3] + ')'
+			)
+			.text('Breed Ranking');
+
+		yGroup
+			.append('g')
+			.selectAll('line')
+			.data(y.ticks(ranks))
+			.enter()
+			.append('line')
+			.attr('class', 'grid-line')
+			.attr('x1', 0)
+			.attr('x2', width)
+			.attr('y1', d => y(d))
+			.attr('y2', d => y(d));
+
+		var lines = svg
+			.append('g')
+			.selectAll('path')
+			.data(parsedData)
+			.enter()
+			.append('path')
+			.attr('class', 'rank-line')
+			.attr('d', function (d) {
+				d.line = this;
+				return line(d.ranks);
+			})
+			.attr('clip-path', 'url(#clip)')
+			.style('stroke', d => color(d.breed))
+			.style('stroke-width', cfg.strokeWidth)
+			.style('opacity', 0.1)
+			.transition()
+			.duration(500)
+			.delay(d => (highlight.indexOf(d.breed) + 1) * 500)
+			.style('opacity', d => (highlight.includes(d.breed) ? 1 : 0.1));
+
+		var endLabels = svg
+			.append('g')
+			.attr('class', 'end-labels')
+			.selectAll('text')
+			.data(parsedData.filter(d => highlight.includes(d.breed)))
+			.enter()
+			.append('text')
+			.attr('class', 'end-label')
+			.attr('x', d => x(d.ranks[d.ranks.length - 1].year))
+			.attr('y', d => y(d.ranks[d.ranks.length - 1].rank))
+			.attr('dx', 20)
+			.attr('dy', cfg.strokeWidth / 2)
+			.text(d => d.breed)
+			.style('opacity', 0)
+			.transition()
+			.duration(500)
+			.delay(d => (highlight.indexOf(d.breed) + 1) * 500)
+			.style('opacity', 1);
+
+		var endDots = svg
+			.append('g')
+			.selectAll('circle')
+			.data(parsedData.filter(d => highlight.includes(d.breed)))
+			.enter()
+			.append('circle')
+			.attr('class', 'end-circle')
+			.attr('cx', d => x(d.ranks[d.ranks.length - 1].year))
+			.attr('cy', d => y(d.ranks[d.ranks.length - 1].rank))
+			.attr('r', cfg.strokeWidth + 3)
+			.style('fill', d => color(d.breed))
+			.style('opacity', 0)
+			.transition()
+			.duration(500)
+			.delay(d => (highlight.indexOf(d.breed) + 1) * 500)
+			.style('opacity', 1);
+
+		var tooltip = svg
+			.append('g')
+			.attr('transform', 'translate(-100, -100)')
+			.attr('class', 'tooltip');
+		tooltip.append('circle').attr('r', cfg.strokeWidth + 3);
+		tooltip.append('text').attr('class', 'name').attr('y', -20);
+
+		var voronoiGroup = svg.append('g').attr('class', 'voronoi');
+
+		voronoiGroup
+			.selectAll('path')
+			.data(voronoi.polygons(d3.merge(parsedData.map(d => d.ranks))))
+			.enter()
+			.append('path')
+			.attr('d', d => (d ? 'M' + d.join('L') + 'Z' : null))
+			.on('mouseover', mouseover)
+			.on('mouseout', mouseout);
+
+		svg
+			.selectAll('.rank-line')
+			.each(d =>
+				highlight.includes(d.breed) ? d.line.parentNode.appendChild(d.line) : 0
+			);
+
+		svg.select('g.end-labels').raise();
+
+		function mouseover(d) {
+			svg.selectAll('.end-label').style('opacity', 0);
+			svg.selectAll('.end-circle').style('opacity', 0);
+
+			svg.selectAll('.rank-line').style('opacity', 0.1);
+			d3.select(d.data.breed.line).style('opacity', 1);
+			d.data.breed.line.parentNode.appendChild(d.data.breed.line);
+			tooltip
+				.attr(
+					'transform',
+					'translate(' + x(d.data.year) + ',' + y(d.data.rank) + ')'
+				)
+				.style('fill', color(d.data.breed.breed))
+				.style('opacity', 1);
+			tooltip
+				.select('text')
+				.text(d.data.breed.breed)
+				.attr('text-anchor', d.data.year == x.domain()[0] ? 'start' : 'middle')
+				.attr('dx', d.data.year == x.domain()[0] ? -10 : 0);
+		}
+
+		function mouseout(d) {
+			svg
+				.selectAll('.rank-line')
+				.style('opacity', d => (highlight.includes(d.breed) ? 1 : 0.1));
+
+			svg.selectAll('.end-label').style('opacity', 1);
+			svg.selectAll('.end-circle').style('opacity', 1);
+			tooltip.attr('transform', 'translate(-100,-100)');
+		}
+	});
+	currentPage = 2;
+};
+
+let pieToggled = true;
+</script>
+
+<script>const showBars = () => {
+	if (!document.querySelector('#dog-nav-3').classList.contains('active')) {
+		d3.select('svg').remove();
+	}
+
+	if (currentPage === 3) {
+		return;
+	}
+
+	document.querySelector('.active').classList.remove('active');
+	document.querySelector('#dog-nav-3').classList.add('active');
+	document.querySelector('#dog-nav-prev').classList.remove('disabled');
+	document.querySelector('#dog-nav-next').classList.remove('disabled');
+	document.querySelector('#doggy-details').innerHTML =
+		"<p>Of the AKCs top 10 ranked breeds, only 5 can be found in the category for '<strong>Brightest Dogs</strong>'.</p><p>Of those 5, there is a fairly consistent measure of dog height, though their respective weights appear highly variable.</p>";
+	let chartTitle = document.querySelector('#chart-title');
+	chartTitle.innerHTML =
+		'<h1 class="display-6">Top 10 Breeds: Weight & Height</h1><p class="text-muted">Hover over bars to view details.</p>';
+	chartTitle.style.marginBottom = '0';
+
+	const margin = { top: 50, right: 200, bottom: 100, left: 125 },
+		width = 1260 - margin.left - margin.right,
+		height = 960 - margin.top - margin.bottom;
+
+	const div = d3.select('body').append('div').attr('class', 'toolTip');
+
+	const svg = d3
+		.select('#chart-container')
+		.append('svg')
+		.attr('width', width + margin.left + margin.right)
+		.attr('height', height + margin.top + margin.bottom)
+		.append('g')
+		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+	d3.csv('breed_size_info.csv', (err, data) => {
+		if (err) throw err;
+
+		const subgroups = data.columns.slice(1);
+		const groups = d3.map(data, d => d.breed).keys();
+		const x = d3.scaleBand().domain(groups).range([0, width]).padding([0.15]);
+
+		svg
+			.append('g')
+			.classed('axis-x', true)
+			.attr('transform', 'translate(0,' + height + ')')
+			.call(d3.axisBottom(x).tickSize(0))
+			.selectAll('text')
+			.style('font-size', 12)
+			.attr('y', (d, i) => (i % 2 === 0 ? 15 : 45));
+
+		svg
+			.select('.axis-x')
+			.selectAll('line')
+			.data(data)
+			.attr('stroke', '#999')
+			.attr('y2', (d, i) => (i % 2 === 0 ? 10 : 40));
+
+		const y = d3.scaleLinear().domain([0, 100]).range([height, 0]);
+		svg.append('g').call(d3.axisLeft(y));
+
+		const z = d3.scaleOrdinal().range(d3.schemeSet2);
+
+		const xSubgroup = d3
+			.scaleBand()
+			.domain(subgroups)
+			.range([0, x.bandwidth()])
+			.padding([0.1]);
+
+		const color = d3.scaleOrdinal().domain(subgroups).range(d3.schemeSet2);
+
+		svg
+			.append('g')
+			.selectAll('g')
+			.data(data)
+			.enter()
+			.append('g')
+			.attr('transform', d => 'translate(' + x(d.breed) + ',0)')
+			.classed('breed', true)
+			.selectAll('rect')
+			.data(d =>
+				subgroups.map(key => {
+					return { key: key, value: d[key] };
+				})
+			)
+			.enter()
+			.append('rect')
+			.attr('x', d => xSubgroup(d.key))
+			.attr('y', d => y(d.value))
+			.attr('width', xSubgroup.bandwidth())
+			.attr('height', d => height - y(d.value))
+			.attr('fill', d => color(d.key));
+
+		const barGroup = svg
+			.selectAll('.breed')
+			.data(data)
+			.attr('class', (d, i) => `barGroup-${i}`)
+			.style('opacity', 0.75);
+
+		barGroup.on('mouseover', (d, i) => {
+			d3.select(`.barGroup-${i}`)
+				.style('opacity', 1)
+				.style('transition', 'opacity 0.15s');
+			d3.selectAll('rect').style('border', '1px solid black');
+		});
+
+		barGroup.on('mousemove', d => {
+			div.style('left', d3.event.pageX + 40 + 'px');
+			div.style('top', d3.event.pageY - 75 + 'px');
+			div.style('display', 'inline-block');
+			div.style('background-color', 'rgba(255,255,255,0.9)');
+			div.style('padding', '25px 10px 0 10px');
+			div.html(`
+        <h6 class='tooltip-title'>${d.breed}</h6>
+				<hr/>
+        <p>Average Weight: <b>${d.average_weight} lbs</b></p>
+        <p>Average Height: <b>${d.average_height} in</b></p>
+      `);
+		});
+
+		barGroup.on('mouseout', (d, i) => {
+			d3.select(`.barGroup-${i}`).style('opacity', 0.75);
+			div.style('display', 'none');
+		});
+
+		const legend = svg
+			.append('g')
+			.attr('font-family', 'sans-serif')
+			.attr('font-size', 10)
+			.attr('text-anchor', 'end')
+			.selectAll('g')
+			.data(subgroups)
+			.enter()
+			.append('g')
+			.attr('transform', (d, i) => 'translate(0,' + i * 20 + ')');
+
+		legend
+			.append('rect')
+			.attr('x', width - 19)
+			.attr('width', 19)
+			.attr('height', 19)
+			.attr('fill', z);
+
+		legend
+			.append('text')
+			.attr('x', width - 24)
+			.attr('y', 9.5)
+			.attr('dy', '0.32em')
+			.text(d => {
+				return d == 'average_weight' ? 'Avg. Weight (lbs)' : 'Avg. Height (in)';
+			});
+	});
+	currentPage = 3;
+};</script>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <h1 class="display-4">
+          Does Size Matter?
+          <div
+            style="
+              font-size: 100px;
+              vertical-align: sub;
+              display: inline-block;
+            "
+          >
+            &#128054;
+          </div>
+        </h1>
+        <p class="lead">Are a dog's intelligence and size correlated?</p>
+      </div>
+    </div>
+    <hr />
+    <div class="row">
+      <div class="col">
+        <nav>
+          <ul class="pagination" style="display: inline-flex">
+            <li
+              id="dog-nav-prev"
+              class="page-item"
+              onclick="handlePrevious()"
+            >
+              <button class="page-link" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </button>
+            </li>
+            <li
+              id="dog-nav-1"
+              class="page-item dog-nav active"
+              onclick="showPie()"
+            >
+              <button class="page-link">1</button>
+            </li>
+            <li
+              id="dog-nav-2"
+              class="page-item dog-nav"
+              onclick="showTrendLines()"
+            >
+              <button class="page-link">2</button>
+            </li>
+            <li id="dog-nav-3" class="page-item dog-nav" onclick="showBars()">
+              <button class="page-link">3</button>
+            </li>
+            <li
+              id="dog-nav-4"
+              class="page-item dog-nav"
+              onclick="showScatter()"
+            >
+              <button class="page-link">4</button>
+            </li>
+            <li id="dog-nav-next" class="page-item" onclick="handleNext()">
+              <button class="page-link" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div id="chart-instructions" class="col"></div>
+    </div>
+    <div id="chart-title" class="row"></div>
+    <div class="row">
+      <div id="chart-container"></div>
+    </div>
+    <div class="row">
+      <div id="dog-card" class="card">
+        <div id="doggy-details" class="card-body"></div>
+        <span id="elips" style="font-size: 24px">&#8942;</span>
+      </div>
+    </div>
+  </div>
+</body>
+
 </html>

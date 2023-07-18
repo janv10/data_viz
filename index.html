@@ -11,12 +11,14 @@
       }
   
       .chart {
-        width: 400px;
-        height: 400px;
+        width: 600px;
+        height: 600px;
         background-color: #f7f7f7;
         border: 1px solid #ccc;
         display: none;
       }
+
+      
   
       .active {
         display: block;
@@ -74,11 +76,69 @@
       // Clear existing content
       chart.html('');
 
+
       // Generate content based on the chart number
       switch (chartNumber) {
         case 1:
           chart.append('p').text('Pie Chart');
+
+          // Load the data from the CSV file
+          d3.csv('netflix_titles_nov_2019.csv').then(function(data) {
+            // Extract the "type" field
+            const types = data.map(d => d.type);
+
+            // Count the occurrences of each category
+            const counts = {};
+            types.forEach(function(type) {
+              counts[type] = (counts[type] || 0) + 1;
+            });
+
+            // Convert counts object to an array of objects
+            const categoryCounts = Object.keys(counts).map(function(type) {
+              return { type, count: counts[type] };
+            });
+
+            // Create the pie chart
+            const width = 400;
+            const height = 400;
+            const radius = Math.min(width, height) / 2;
+
+            const color = d3.scaleOrdinal()
+              .domain(categoryCounts.map(d => d.type))
+              .range(d3.schemeCategory10);
+
+            const pie = d3.pie()
+              .value(d => d.count)
+              .sort(null);
+
+            const arc = d3.arc()
+              .innerRadius(0)
+              .outerRadius(radius);
+
+            const svg = chart.append('svg')
+              .attr('width', width)
+              .attr('height', height)
+              .append('g')
+              .attr('transform', `translate(${width / 2}, ${height / 2})`);
+
+            const arcs = svg.selectAll('arc')
+              .data(pie(categoryCounts))
+              .enter()
+              .append('g');
+
+            arcs.append('path')
+              .attr('d', arc)
+              .attr('fill', d => color(d.data.type));
+
+            arcs.append('text')
+              .attr('transform', d => `translate(${arc.centroid(d)})`)
+              .attr('text-anchor', 'middle')
+              .text(d => `${d.data.type}: ${d.data.count}`);
+          });
           break;
+
+
+          
         case 2:
           chart.append('p').text('Content Over the Years');
           break;

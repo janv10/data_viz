@@ -83,29 +83,24 @@
         case 1:
           //chart.append('p').text('Pie Chart');
 
-          const data = [
-      { category: "International TV Shows", count: 1 },
-      { category: "Korean TV Shows", count: 1 },
-      { category: "Romantic TV Shows", count: 1 },
-      { category: "Documentaries", count: 1 },
-      { category: "International Movies", count: 2 },
-      { category: "Comedies", count: 3 },
-      { category: "Dramas", count: 7 },
-      { category: "Independent Movies", count: 3 },
-      { category: "Kids' TV", count: 1 },
-      { category: "Thrillers", count: 2 },
-      { category: "Crime TV Shows", count: 2 },
-      { category: "Spanish-Language TV Shows", count: 1 },
-      { category: "Reality TV", count: 1 },
-      { category: "Action & Adventure", count: 2 },
-      { category: "TV Comedies", count: 4 },
-      { category: "Stand-Up Comedy & Talk Shows", count: 1 },
-      { category: "TV Dramas", count: 3 },
-      { category: "Anime Series", count: 1 },
-      { category: "Docuseries", count: 2 },
-      { category: "Children & Family Movies", count: 2 },
-      { category: "Romantic Movies", count: 1 }
-    ];
+          d3.csv("netflix_data.csv").then(function(data) {
+  const categoryCounts = {};
+
+  // Count the occurrences of each category
+  data.forEach(function(d) {
+    const categories = d.listed_in.split(", ");
+    categories.forEach(function(category) {
+      categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+    });
+  });
+
+  // Convert counts object to an array of objects
+  const formattedData = Object.keys(categoryCounts).map(function(category) {
+    return { category: category, count: categoryCounts[category] };
+  });
+
+  // Log the formatted data to the console
+  console.log(formattedData);
 
     // Set up the bubble chart
     const width = 600;
@@ -163,9 +158,10 @@
       .append("div")
       .attr("class", "tooltip")
       .style("opacity", 0);
-          break;
+          
 
-
+    });
+    break;
           
         case 2:
           chart.append('p').text('Content Over the Years');

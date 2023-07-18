@@ -14,7 +14,7 @@
         width: 600px;
         height: 600px;
         background-color: #f7f7f7;
-        border: 1px solid #f7f7f7;
+        border: 1px solid #ccc;
         display: none;
       }
 
@@ -126,9 +126,19 @@
               .enter()
               .append('g');
 
-            arcs.append('path')
-              .attr('d', arc)
-              .attr('fill', d => color(d.data.type));
+              arcs.append('path')
+                .attr('d', arc)
+                .attr('fill', d => color(d.data.type))
+                .on('mouseover', function(d) {
+                  const percentage = ((d.endAngle - d.startAngle) / (2 * Math.PI)) * 100;
+                  tooltip.style('opacity', 1)
+                    .html(`${d.data.type}: ${percentage.toFixed(1)}%`)
+                    .style('left', (d3.event.pageX + 10) + 'px')
+                    .style('top', (d3.event.pageY + 10) + 'px');
+                })
+                .on('mouseout', function(d) {
+                  tooltip.style('opacity', 0);
+                });
 
             arcs.append('text')
               .attr('transform', d => `translate(${arc.centroid(d)})`)
@@ -137,8 +147,6 @@
           });
           break;
 
-
-          
         case 2:
           chart.append('p').text('Content Over the Years');
           break;

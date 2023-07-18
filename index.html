@@ -248,12 +248,8 @@ const showPie = () => {
 		const ordScale = d3
 			.scaleOrdinal()
 			.domain([
-				'Brightest Dogs',
-				'Excellent Working Dogs',
-				'Above Average Working Dogs',
-				'Average Working Dogs',
-				'Fair Working Dogs',
-				'Lowest Degree of Working Dogs',
+				'TV Shows',
+				'Movies'
 			])
 			.range(d3.schemePaired);
 		const pie = d3.pie().value(() => data.length);
@@ -973,7 +969,7 @@ let pieToggled = true;
     <div class="row">
       <div class="col">
         <h1 class="display-4">
-          Does Size Matter?
+          Let's Explore Netflix!
           <div
             style="
               font-size: 100px;

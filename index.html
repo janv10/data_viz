@@ -2,9 +2,96 @@
 <html>
   <head>
     <title>Netflix - Interactive Analysis</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+      }
+  
+      .chart {
+        width: 400px;
+        height: 400px;
+        background-color: #f7f7f7;
+        border: 1px solid #ccc;
+        display: none;
+      }
+  
+      .active {
+        display: block;
+      }
+  
+      .button-container {
+        margin-bottom: 10px;
+      }
+  
+      .button {
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        border-radius: 5px;
+        background-color: #4CAF50;
+        color: #fff;
+        cursor: pointer;
+        margin-right: 10px;
+      }
+    </style>
+
+
   </head>
   <body>
-    
-    <p>This is an example paragraph. Anything in the <strong>body</strong> tag will appear on the page, just like this <strong>p</strong> tag and its contents.</p>
+    <h1 class="display-4"> Let's explore Netflix!</h1>
+    <div class="button-container">
+      <button class="button" onclick="showChart(1)">1</button>
+      <button class="button" onclick="showChart(2)">2</button>
+      <button class="button" onclick="showChart(3)">3</button>
+      <button class="button" onclick="showChart(4)">4</button>
+    </div>
+    <div class="chart" id="chart1"></div>
+    <div class="chart" id="chart2"></div>
+    <div class="chart" id="chart3"></div>
+    <div class="chart" id="chart4"></div>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script>
+    // Show the specified chart based on the button click
+    function showChart(chartNumber) {
+      // Hide all charts
+      d3.selectAll('.chart').style('display', 'none');
+
+      // Show the selected chart
+      const selectedChart = d3.select(`#chart${chartNumber}`);
+      selectedChart.style('display', 'block');
+
+      // Generate the chart content based on the selected chart number
+      generateChartContent(selectedChart, chartNumber);
+    }
+
+    // Generate the content for each chart based on the chart number
+    function generateChartContent(chart, chartNumber) {
+      // Clear existing content
+      chart.html('');
+
+      // Generate content based on the chart number
+      switch (chartNumber) {
+        case 1:
+          chart.append('p').text('Pie Chart');
+          break;
+        case 2:
+          chart.append('p').text('Content Over the Years');
+          break;
+        case 3:
+          chart.append('p').text('Content from different countries');
+          break;
+        case 4:
+          chart.append('p').text('Top Categories');
+          break;
+        default:
+          chart.append('p').text('No chart content available');
+      }
+    }
+  </script>
   </body>
 </html>

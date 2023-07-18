@@ -15,6 +15,7 @@
         height: 600px;
         background-color: #f7f7f7;
         border: 1px solid #ccc;
+        border: 1px solid #f7f7f7;
         display: none;
       }
 
@@ -39,7 +40,6 @@
         cursor: pointer;
         margin-right: 10px;
       }
-
     </style>
 
 
@@ -127,18 +127,19 @@
               .enter()
               .append('g');
 
-              arcs.append('path')
-                .attr('d', arc)
-                .attr('fill', d => color(d.data.type));
+            arcs.append('path')
+              .attr('d', arc)
+              .attr('fill', d => color(d.data.type));
 
             arcs.append('text')
               .attr('transform', d => `translate(${arc.centroid(d)})`)
               .attr('text-anchor', 'middle')
               .text(d => `${d.data.type}: ${d.data.count}`);
-            
- 
+          });
           break;
 
+
+          
         case 2:
           chart.append('p').text('Content Over the Years');
           break;

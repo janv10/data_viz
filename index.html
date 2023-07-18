@@ -1,69 +1,80 @@
 <!doctype html>
 <html>
-  <head>
-    <title>Netflix - Interactive Analysis</title>
 
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 20px;
-      }
-  
-      .chart {
-        width: 900px;
-        height: 700px;
-        background-color: #f7f7f7;
-        border: 1px solid #ccc;
-        border: 1px solid #f7f7f7;
-        display: none;
-      }
-  
-      .active {
-        display: block;
-      }
-  
-      .button-container {
-        margin-bottom: 10px;
-      }
-  
-      .button {
-        padding: 10px 20px;
-        font-size: 16px;
-        font-weight: bold;
-        border: none;
-        border-radius: 5px;
-        background-color: #4CAF50;
-        color: #fff;
-        cursor: pointer;
-        margin-right: 10px;
-      }
+<head>
+  <title>Netflix - Interactive Analysis</title>
 
-      .button:hover {
-  background-color: #45a049;
-}
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
 
-.button:active {
-  background-color: #3d8e41;
-}
-    </style>
+    .chart {
+      width: 900px;
+      height: 700px;
+      background-color: #f7f7f7;
+      border: 1px solid #ccc;
+      border: 1px solid #f7f7f7;
+      display: none;
+    }
+
+    .active {
+      display: block;
+    }
+
+    .button-container {
+      margin-bottom: 10px;
+    }
+
+    .button {
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      background-color: #4CAF50;
+      color: #fff;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    .button:hover {
+      background-color: #45a049;
+    }
+
+    .button:active {
+      background-color: #3d8e41;
+    }
+
+    .tooltip {
+      position: absolute;
+      padding: 8px;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: #fff;
+      font-size: 12px;
+      pointer-events: none;
+    }
+  </style>
 
 
-  </head>
-  <body>
-    <h1 class="display-4"> Let's explore Netflix!</h1>
-    <div class="button-container">
-      <button class="button" onclick="showChart(1)">1</button>
-      <button class="button" onclick="showChart(2)">2</button>
-      <button class="button" onclick="showChart(3)">3</button>
-      <button class="button" onclick="showChart(4)">4</button>
-    </div>
-    <div class="chart" id="chart1"></div>
-    <div class="chart" id="chart2"></div>
-    <div class="chart" id="chart3"></div>
-    <div class="chart" id="chart4"></div>
+</head>
 
-    <script src="https://d3js.org/d3.v7.min.js"></script>
+<body>
+  <h1 class="display-4"> Let's explore Netflix!</h1>
+  <div class="button-container">
+    <button class="button" onclick="showChart(1)">1</button>
+    <button class="button" onclick="showChart(2)">2</button>
+    <button class="button" onclick="showChart(3)">3</button>
+    <button class="button" onclick="showChart(4)">4</button>
+  </div>
+  <div class="chart" id="chart1"></div>
+  <div class="chart" id="chart2"></div>
+  <div class="chart" id="chart3"></div>
+  <div class="chart" id="chart4"></div>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
   <script>
     // Show the specified chart based on the button click
     function showChart(chartNumber) {
@@ -90,92 +101,205 @@
           //chart.append('p').text('Pie Chart');
 
           const data = [
-      { category: "International TV Shows", count: 1 },
-      { category: "Korean TV Shows", count: 1 },
-      { category: "Romantic TV Shows", count: 1 },
-      { category: "Documentaries", count: 1 },
-      { category: "International Movies", count: 2 },
-      { category: "Comedies", count: 3 },
-      { category: "Dramas", count: 7 },
-      { category: "Independent Movies", count: 3 },
-      { category: "Kids' TV", count: 1 },
-      { category: "Thrillers", count: 2 },
-      { category: "Crime TV Shows", count: 2 },
-      { category: "TV Shows (Spanish)", count: 1 },
-      { category: "Reality TV", count: 1 },
-      { category: "Action & Adventure", count: 2 },
-      { category: "TV Comedies", count: 4 },
-      { category: "Stand-Up Comedy", count: 1 },
-      { category: "TV Dramas", count: 3 },
-      { category: "Anime Series", count: 1 },
-      { category: "Docuseries", count: 2 },
-      { category: "Children & Family Movies", count: 2 },
-      { category: "Romantic Movies", count: 1 }
-    ];
+            { category: "International TV Shows", count: 1 },
+            { category: "Korean TV Shows", count: 1 },
+            { category: "Romantic TV Shows", count: 1 },
+            { category: "Documentaries", count: 1 },
+            { category: "International Movies", count: 2 },
+            { category: "Comedies", count: 3 },
+            { category: "Dramas", count: 7 },
+            { category: "Independent Movies", count: 3 },
+            { category: "Kids' TV", count: 1 },
+            { category: "Thrillers", count: 2 },
+            { category: "Crime TV Shows", count: 2 },
+            { category: "TV Shows (Spanish)", count: 1 },
+            { category: "Reality TV", count: 1 },
+            { category: "Action & Adventure", count: 2 },
+            { category: "TV Comedies", count: 4 },
+            { category: "Stand-Up Comedy", count: 1 },
+            { category: "TV Dramas", count: 3 },
+            { category: "Anime Series", count: 1 },
+            { category: "Docuseries", count: 2 },
+            { category: "Children & Family Movies", count: 2 },
+            { category: "Romantic Movies", count: 1 }
+          ];
 
-    // Set up the bubble chart
-    const width = 900;
-const height = 600;
-const svg = d3.select("#chart1")
-  .append("svg")
-  .attr("width", width)
-  .attr("height", height);
+          // Set up the bubble chart
+          const width = 900;
+          const height = 600;
+          const svg = d3.select("#chart1")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
 
-const color = d3.scaleOrdinal(d3.schemeCategory10);
+          const color = d3.scaleOrdinal(d3.schemeCategory10);
 
-const pack = data => d3.pack()
-  .size([width, height])
-  .padding(7) // Adjust the padding to increase bubble size
-  (d3.hierarchy({ children: data })
-    .sum(d => d.count));
+          const pack = data => d3.pack()
+            .size([width, height])
+            .padding(7) // Adjust the padding to increase bubble size
+            (d3.hierarchy({ children: data })
+              .sum(d => d.count));
 
-const root = pack(data);
+          const root = pack(data);
 
-const node = svg.selectAll("circle")
-  .data(root.leaves())
-  .join("circle")
-  .attr("class", "node")
-  .attr("cx", d => d.x)
-  .attr("cy", d => d.y)
-  .attr("r", d => d.r)
-  .attr("fill", d => color(d.data.category))
-  .on("mouseover", function (event, d) {
-    d3.select(this).attr("fill", "#ff7f0e");
-    tooltip.style("opacity", 1)
-      .html(`${d.data.category}: ${d.data.count}`)
-      .style("left", (d3.event.pageX + 10) + "px")
-      .style("top", (d3.event.pageY + 10) + "px");
-  })
-  .on("mouseout", function (event, d) {
-    d3.select(this).attr("fill", d => color(d.data.category));
-    tooltip.style("opacity", 0);
-  });
+          const node = svg.selectAll("circle")
+            .data(root.leaves())
+            .join("circle")
+            .attr("class", "node")
+            .attr("cx", d => d.x)
+            .attr("cy", d => d.y)
+            .attr("r", d => d.r)
+            .attr("fill", d => color(d.data.category))
+            .on("mouseover", function (event, d) {
+              d3.select(this).attr("fill", "#ff7f0e");
+              tooltip.style("opacity", 1)
+                .html(`${d.data.category}: ${d.data.count}`)
+                .style("left", (d3.event.pageX + 10) + "px")
+                .style("top", (d3.event.pageY + 10) + "px");
+            })
+            .on("mouseout", function (event, d) {
+              d3.select(this).attr("fill", d => color(d.data.category));
+              tooltip.style("opacity", 0);
+            });
 
-// Add labels to the bubbles
-const labels = svg.selectAll("text")
-  .data(root.leaves())
-  .join("text")
-  .attr("class", "label")
-  .attr("x", d => d.x)
-  .attr("y", d => d.y)
-  .attr("text-anchor", "middle")
-  .attr("dominant-baseline", "middle")
-  .attr("fill", "#000")
-  .style("font-size", "12px")
-  .text(d => d.data.category);
+          // Add labels to the bubbles
+          const labels = svg.selectAll("text")
+            .data(root.leaves())
+            .join("text")
+            .attr("class", "label")
+            .attr("x", d => d.x)
+            .attr("y", d => d.y)
+            .attr("text-anchor", "middle")
+            .attr("dominant-baseline", "middle")
+            .attr("fill", "#000")
+            .style("font-size", "12px")
+            .text(d => d.data.category);
 
-// Add tooltip element
-const tooltip = d3.select("body")
-  .append("div")
-  .attr("class", "tooltip")
-  .style("opacity", 0);
-          break;
+          // Add tooltip element
+          const tooltip = d3.select("body")
+            .append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+          break; //end bubble chart
 
-
-          
         case 2:
-          chart.append('p').text('Content Over the Years');
+          const data2 = [
+            { year: 2008, type: "TV Show", count: 1 },
+            { year: 2008, type: "Movie", count: 1 },
+            //{ year: 2009, type: "TV Show", count: 25 },
+            { year: 2009, type: "Movie", count: 2 },
+            //{ year: 2010, type: "TV Show", count: 25 },
+            { year: 2010, type: "Movie", count: 1 },
+            { year: 2011, type: "TV Show", count: 25 },
+            { year: 2011, type: "Movie", count: 13 },
+            { year: 2012, type: "TV Show", count: 3 },
+            { year: 2012, type: "Movie", count: 4 },
+            { year: 2013, type: "TV Show", count: 3 },
+            { year: 2013, type: "Movie", count: 6 },
+            //{ year: 2014, type: "TV Show", count: 25 },
+            { year: 2014, type: "Movie", count: 19 },
+            { year: 2015, type: "TV Show", count: 6 },
+            { year: 2015, type: "Movie", count: 58 },
+            { year: 2016, type: "TV Show", count: 148 },
+            { year: 2016, type: "Movie", count: 264 },
+            { year: 2017, type: "TV Show", count: 271 },
+            { year: 2017, type: "Movie", count: 913 },
+            { year: 2018, type: "TV Show", count: 339 },
+            { year: 2018, type: "Movie", count: 1290 },
+            { year: 2019, type: "TV Show", count: 476 },
+            { year: 2019, type: "Movie", count: 1367 },
+          ];
+
+          const margin = { top: 20, right: 20, bottom: 50, left: 50 };
+          const width2 = 600 - margin.left - margin.right;
+          const height2 = 400 - margin.top - margin.bottom;
+
+          const xScale2 = d3.scaleLinear()
+            .domain(d3.extent(data2, d => d.year))
+            .range([0, width2]);
+
+          const yScale2 = d3.scaleLinear()
+            .domain([0, d3.max(data2, d => d.count)])
+            .range([height2, 0]);
+
+          const colorScale2 = d3.scaleOrdinal()
+            .domain(["TV Show", "Movie"])
+            .range(["#a678de", "#6ad49b"]);
+
+          const svg2 = d3.select("#chart2")
+            .append("svg")
+            .attr("width", width2 + margin.left + margin.right)
+            .attr("height", height2 + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+          const tooltip2 = d3.select("#chart2")
+            .append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
+          // Separate the data by type
+          const dataTVShow = data2.filter(d => d.type === "TV Show");
+          const dataMovie = data2.filter(d => d.type === "Movie");
+
+          // Create line generators for each category
+          const lineTVShow = d3.line()
+            .x(d => xScale2(d.year))
+            .y(d => yScale2(d.count));
+
+          const lineMovie = d3.line()
+            .x(d => xScale2(d.year))
+            .y(d => yScale2(d.count));
+
+          // Append the lines
+          svg2.append("path")
+            .datum(dataTVShow)
+            .attr("fill", "none")
+            .attr("stroke", "#a678de")
+            .attr("stroke-width", 2)
+            .attr("d", lineTVShow);
+
+          svg2.append("path")
+            .datum(dataMovie)
+            .attr("fill", "none")
+            .attr("stroke", "#6ad49b")
+            .attr("stroke-width", 2)
+            .attr("d", lineMovie);
+
+          // Append the circles
+          const circles2 = svg2.selectAll("circle")
+            .data(data2)
+            .join("circle")
+            .attr("cx", d => xScale2(d.year))
+            .attr("cy", d => yScale2(d.count))
+            .attr("r", 5)
+            .attr("fill", d => colorScale2(d.type))
+            .on("mouseover", (event, d) => {
+              d3.select(event.currentTarget).attr("fill", "#ff7f0e");
+              tooltip2.style("opacity", 1)
+                .html(`Year: ${d.year}<br>Number Added: ${d.count}<br>Type: ${d.type}`)
+                .style("left", (event.pageX + 10) + "px")
+                .style("top", (event.pageY + 10) + "px");
+            })
+            .on("mouseout", (event, d) => {
+              d3.select(event.currentTarget).attr("fill", colorScale2(d.type));
+              tooltip2.style("opacity", 0);
+            });
+
+          const xAxis2 = d3.axisBottom(xScale2)
+            .tickFormat(d3.format("d"));
+
+          const yAxis2 = d3.axisLeft(yScale2);
+
+          svg2.append("g")
+            .attr("transform", `translate(0,${height2})`)
+            .call(xAxis2);
+
+          svg2.append("g")
+            .call(yAxis2);
+
           break;
+
         case 3:
           chart.append('p').text('Content from different countries');
           break;
@@ -187,5 +311,6 @@ const tooltip = d3.select("body")
       }
     }
   </script>
-  </body>
+</body>
+
 </html>

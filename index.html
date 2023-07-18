@@ -242,7 +242,7 @@ const showPie = () => {
 		.append('g')
 		.attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
 
-	d3.csv('dog_intelligence.csv', (err, data) => {
+	d3.csv('netflix_titles_nov_2019.csv', (err, data) => {
 		if (err) throw err;
 
 		const ordScale = d3
@@ -258,7 +258,7 @@ const showPie = () => {
 		arc
 			.append('path')
 			.attr('d', path)
-			.attr('fill', d => ordScale(d.data.classification))
+			.attr('fill', d => ordScale(d.data.type))
 			.attr('stroke', 'white')
 			.style('stroke-width', '0.15px')
 			.style('opacity', '0.55');
@@ -281,7 +281,7 @@ const showPie = () => {
 			div.style('background-color', 'rgba(255,255,255,0.9)');
 			div.style('padding', '25px 10px 0 10px');
 			div.html(`
-        <h6 class='tooltip-title'>${d.data.breed}</h6>
+        <h6 class='tooltip-title'>${d.data.listed_in}</h6>
 				<hr/>
         <p>Responds to first command with <b>${
 					d.data.obey * 100
@@ -400,12 +400,8 @@ showPie();
 		const color = d3
 			.scaleOrdinal()
 			.domain([
-				'Brightest Dogs',
-				'Excellent Working Dogs',
-				'Above Average Working Dogs',
-				'Average Working Dogs',
-				'Fair Working Dogs',
-				'Lowest Degree of Working Dogs',
+				'TV Shows',
+				'Movies'
 			])
 			.range(d3.schemePaired);
 
@@ -997,6 +993,7 @@ let pieToggled = true;
                 <span aria-hidden="true">&laquo;</span>
               </button>
             </li>
+    
             <li
               id="dog-nav-1"
               class="page-item dog-nav active"

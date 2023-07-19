@@ -187,7 +187,7 @@
 
           const pack = data => d3.pack()
             .size([width, height])
-            .padding(7) // Adjust the padding to increase bubble size
+            .padding(10) // Adjust the padding to increase bubble size
             (d3.hierarchy({ children: data })
               .sum(d => d.count));
 
@@ -202,7 +202,10 @@
             .attr("r", d => d.r)
             .attr("fill", d => color(d.data.category))
             .on("mouseover", function (event, d) {
-              d3.select(this).attr("fill", "#fdff32");
+              d3.select(this).attr("fill", "#E50914")
+                .transition()
+                .duration(100)
+                .attr("r", d => d.r + 10);
               tooltip.style("opacity", 1)
                 .html(`${d.data.category}: ${d.data.count}`)
                 .attr("x", width - 10) // Set x position of tooltip (right corner)
@@ -210,10 +213,18 @@
                 .style("text-anchor", "end") // Align text to the right
                 .style("pointer-events", "none") // Prevent tooltip from blocking mouse interactions
                 .style("font-size", "16px");
+
+
             })
             .on("mouseout", function (event, d) {
-              d3.select(this).attr("fill", d => color(d.data.category));
+              d3.select(this).attr("fill", d => color(d.data.category))
+                .transition()
+                .duration(100)
+                .attr("r", d => d.r);
+
               tooltip.style("opacity", 0);
+
+  
             });
 
           // Add labels to the bubbles

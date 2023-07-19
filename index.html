@@ -106,30 +106,50 @@
           //chart.append('p').text('Pie Chart');
 
           const data = [
-            { category: "International TV Shows", count: 1 },
-            { category: "Korean TV Shows", count: 1 },
-            { category: "Romantic TV Shows", count: 1 },
-            { category: "Documentaries", count: 1 },
-            { category: "International Movies", count: 2 },
-            { category: "Comedies", count: 3 },
-            { category: "Dramas", count: 7 },
-            { category: "Independent Movies", count: 3 },
-            { category: "Kids' TV", count: 1 },
-            { category: "Thrillers", count: 2 },
-            { category: "Crime TV Shows", count: 2 },
-            { category: "TV Shows (Spanish)", count: 1 },
-            { category: "Reality TV", count: 1 },
-            { category: "Action & Adventure", count: 2 },
-            { category: "TV Comedies", count: 4 },
-            { category: "Stand-Up Comedy", count: 1 },
-            { category: "TV Dramas", count: 3 },
-            { category: "Anime Series", count: 1 },
-            { category: "Docuseries", count: 2 },
-            { category: "Children & Family Movies", count: 2 },
-            { category: "Romantic Movies", count: 1 }
+            { 'category': 'International TV Shows', 'count': 966 },
+            { 'category': 'Korean TV Shows', 'count': 120 },
+            { 'category': 'Romantic TV Shows', 'count': 265 },
+            { 'category': 'Documentaries', 'count': 658 },
+            { 'category': 'International Movies', 'count': 1797 },
+            { 'category': 'Comedies', 'count': 992 },
+            { 'category': 'Dramas', 'count': 1488 },
+            { 'category': 'Independent Movies', 'count': 516 },
+            { 'category': "Kids' TV", 'count': 313 },
+            { 'category': 'Thrillers', 'count': 353 },
+            { 'category': 'Crime TV Shows', 'count': 355 },
+            { 'category': 'Spanish-Language TV Shows', 'count': 114 },
+            { 'category': 'Reality TV', 'count': 146 },
+            { 'category': 'Action & Adventure', 'count': 532 },
+            { 'category': 'TV Comedies', 'count': 425 },
+            { 'category': 'Docuseries', 'count': 271 },
+            { 'category': 'Children & Family Movies', 'count': 340 },
+            { 'category': 'Anime Series', 'count': 111 },
+            { 'category': 'Stand-Up Comedy & Talk Shows', 'count': 42 },
+            { 'category': 'TV Dramas', 'count': 574 },
+            { 'category': 'Romantic Movies', 'count': 338 },
+            { 'category': 'Stand-Up Comedy', 'count': 273 },
+            { 'category': 'Movies', 'count': 55 },
+            { 'category': 'TV Mysteries', 'count': 66 },
+            { 'category': 'Classic Movies', 'count': 65 },
+            { 'category': 'TV Sci-Fi & Fantasy', 'count': 66 },
+            { 'category': 'Sci-Fi & Fantasy', 'count': 165 },
+            { 'category': 'Anime Features', 'count': 41 },
+            { 'category': 'Sports Movies', 'count': 149 },
+            { 'category': 'TV Action & Adventure', 'count': 122 },
+            { 'category': 'Cult Movies', 'count': 42 },
+            { 'category': 'Horror Movies', 'count': 229 },
+            { 'category': 'Teen TV Shows', 'count': 41 },
+            { 'category': 'British TV Shows', 'count': 205 },
+            { 'category': 'Music & Musicals', 'count': 229 },
+            { 'category': 'LGBTQ Movies', 'count': 59 },
+            { 'category': 'Science & Nature TV', 'count': 66 },
+            { 'category': 'Faith & Spirituality', 'count': 46 },
+            { 'category': 'TV Horror', 'count': 51 },
+            { 'category': 'TV Thrillers', 'count': 43 },
+            { 'category': 'Classic & Cult TV', 'count': 24 },
+            { 'category': 'TV Shows', 'count': 10 },
           ];
 
-          // Set up the bubble chart
           const width = 900;
           const height = 600;
           const svg = d3.select("#chart1")
@@ -137,7 +157,33 @@
             .attr("width", width)
             .attr("height", height);
 
-          const color = d3.scaleOrdinal(d3.schemeCategory10);
+          const netflixColors = [
+            "#69A094",
+            "#A3DDCE",
+            "#B63678",
+            "#12E3EA",
+            "#E7742F",
+            "#1ED9E6",
+            "#54AAD4",
+            "#62EBCD",
+            "#2E971A",
+            "#B2E002",
+            "#8089AF",
+            "#B444C0",
+            "#3A05F9",
+            "#AFCA50",
+            "#4996C0",
+            "#D4C6E0",
+            "#6B8D6A",
+            "#B2B263",
+            "#CF9751",
+            "#A2A211",
+            "#EC9CFA",
+            "#A4FA25",
+            "#3415D4"
+          ];
+
+          const color = d3.scaleOrdinal().range(netflixColors);
 
           const pack = data => d3.pack()
             .size([width, height])
@@ -156,11 +202,14 @@
             .attr("r", d => d.r)
             .attr("fill", d => color(d.data.category))
             .on("mouseover", function (event, d) {
-              d3.select(this).attr("fill", "#ff7f0e");
+              d3.select(this).attr("fill", "#fdff32");
               tooltip.style("opacity", 1)
                 .html(`${d.data.category}: ${d.data.count}`)
-                .style("left", (d3.event.pageX + 10) + "px")
-                .style("top", (d3.event.pageY + 10) + "px");
+                .attr("x", width - 10) // Set x position of tooltip (right corner)
+                .attr("y", 15) // Set y position of tooltip (top corner)
+                .style("text-anchor", "end") // Align text to the right
+                .style("pointer-events", "none") // Prevent tooltip from blocking mouse interactions
+                .style("font-size", "16px");
             })
             .on("mouseout", function (event, d) {
               d3.select(this).attr("fill", d => color(d.data.category));
@@ -180,20 +229,18 @@
             .style("font-size", "12px")
             .text(d => d.data.category);
 
-          // Add tooltip element
-          const tooltip = d3.select("body")
-            .append("div")
+          // Add tooltip element within the chart
+          const tooltip = svg.append("text")
             .attr("class", "tooltip")
             .style("opacity", 0);
-          break; //end bubble chart
+
+          break;
 
         case 2:
           const data2 = [
             { year: 2008, type: "TV Show", count: 1 },
             { year: 2008, type: "Movie", count: 1 },
-            //{ year: 2009, type: "TV Show", count: 25 },
             { year: 2009, type: "Movie", count: 2 },
-            //{ year: 2010, type: "TV Show", count: 25 },
             { year: 2010, type: "Movie", count: 1 },
             { year: 2011, type: "TV Show", count: 25 },
             { year: 2011, type: "Movie", count: 13 },
@@ -201,7 +248,6 @@
             { year: 2012, type: "Movie", count: 4 },
             { year: 2013, type: "TV Show", count: 3 },
             { year: 2013, type: "Movie", count: 6 },
-            //{ year: 2014, type: "TV Show", count: 25 },
             { year: 2014, type: "Movie", count: 19 },
             { year: 2015, type: "TV Show", count: 6 },
             { year: 2015, type: "Movie", count: 58 },
@@ -306,7 +352,7 @@
           break;
 
         case 3:
-        const data4 = [
+          const data4 = [
             { country: "USA", content: 2430 },
             { country: "India", content: 345 },
             { country: "UK", content: 34 },
@@ -373,9 +419,9 @@
             .call(yAxis4);
 
           break;
-          
+
         case 4:
-        const geojson = {
+          const geojson = {
             type: "FeatureCollection",
             features: [
               { type: "Feature", properties: { name: "Country A" }, geometry: { type: "Polygon", coordinates: [[[-10, -10], [10, -10], [10, 10], [-10, 10], [-10, -10]]] } },
@@ -449,7 +495,7 @@
           break;
 
         default:
-        
+
           chart.append('p').text('No chart content available');
       }
     }

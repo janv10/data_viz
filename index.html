@@ -56,6 +56,7 @@
       font-size: 12px;
       pointer-events: none;
     }
+
     svg {
       width: 900px;
       height: 600px;
@@ -305,7 +306,7 @@
           break;
 
         case 3:
-        const svg3 = chart.select("svg");
+          const svg3 = chart.select("svg");
           const width3 = +svg3.attr("width");
           const height3 = +svg3.attr("height");
 
@@ -330,13 +331,13 @@
 
           d3.queue()
             .defer(d3.json, worldmap3)
-            .defer(d3.csv, worldpopulation3, function(d) {
+            .defer(d3.csv, worldpopulation3, function (d) {
               data3.set(d.code, +d.pop);
             })
             .await(ready3);
 
           function ready3(error, topo) {
-            const mouseOver3 = function(d) {
+            const mouseOver3 = function (d) {
               d3.selectAll(".Country")
                 .transition()
                 .duration(200)
@@ -354,7 +355,7 @@
                 .text(d.properties.name + ': ' + Math.round((d.total / 1000000) * 10) / 10 + ' mio.');
             }
 
-            const mouseLeave3 = function() {
+            const mouseLeave3 = function () {
               d3.selectAll(".Country")
                 .transition()
                 .duration(200)
@@ -372,18 +373,18 @@
               .enter()
               .append("path")
               .attr("d", path3)
-              .attr("data-name", function(d) {
+              .attr("data-name", function (d) {
                 return d.properties.name;
               })
-              .attr("fill", function(d) {
+              .attr("fill", function (d) {
                 d.total = data3.get(d.id) || 0;
                 return colorScale3(d.total);
               })
               .style("stroke", "transparent")
-              .attr("class", function(d) {
+              .attr("class", function (d) {
                 return "Country";
               })
-              .attr("id", function(d) {
+              .attr("id", function (d) {
                 return d.id;
               })
               .style("opacity", 1)
@@ -395,7 +396,7 @@
               .attr("id", "legend3");
 
             const legend_entry3 = legend3.selectAll("g.legend_entry")
-              .data(colorScale3.range().map(function(d) {
+              .data(colorScale3.range().map(function (d) {
                 d = colorScale3.invertExtent(d);
                 if (d[0] == null) d[0] = colorScale3.domain()[0];
                 if (d[1] == null) d[1] = colorScale3.domain()[1];
@@ -409,22 +410,22 @@
 
             legend_entry3.append("rect")
               .attr("x", 20)
-              .attr("y", function(d, i) {
+              .attr("y", function (d, i) {
                 return height3 - (i * ls_h3) - 2 * ls_h3;
               })
               .attr("width", ls_w3)
               .attr("height", ls_h3)
-              .style("fill", function(d) {
+              .style("fill", function (d) {
                 return colorScale3(d[0]);
               })
               .style("opacity", 0.8);
 
             legend_entry3.append("text")
               .attr("x", 50)
-              .attr("y", function(d, i) {
+              .attr("y", function (d, i) {
                 return height3 - (i * ls_h3) - ls_h3 - 6;
               })
-              .text(function(d, i) {
+              .text(function (d, i) {
                 if (i === 0) return "< " + d[1] / 1000000 + " m";
                 if (d[1] < d[0]) return d[0] / 1000000 + " m +";
                 return d[0] / 1000000 + " m - " + d[1] / 1000000 + " m";
@@ -448,7 +449,7 @@
             }
 
             world3.selectAll("path")
-              .classed("active", centered && function(d) {
+              .classed("active", centered && function (d) {
                 return d === centered;
               });
 
@@ -458,7 +459,62 @@
           }
           break;
         case 4:
-          chart.append('p').text('Top Categories');
+          const data4 = [
+            { country: "USA", content: 2430 },
+            { country: "India", content: 345 },
+            { country: "Canada", content: 14 },
+            { country: "UK", content: 34 }
+          ];
+
+          const margin4 = { top: 20, right: 20, bottom: 50, left: 100 };
+          const width4 = 600 - margin4.left - margin4.right;
+          const height4 = 400 - margin4.top - margin4.bottom;
+
+          const svg4 = chart.append("svg")
+            .attr("width", width4 + margin4.left + margin4.right)
+            .attr("height", height4 + margin4.top + margin4.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin4.left},${margin4.top})`);
+
+          const xScale4 = d3.scaleLinear()
+            .domain([0, d3.max(data4, d => d.content)])
+            .range([0, width4]);
+
+          const yScale4 = d3.scaleBand()
+            .domain(data4.map(d => d.country))
+            .range([0, height4])
+            .padding(0.1);
+
+          const tooltip4 = d3.select("body")
+            .append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
+          const bars4 = svg4.selectAll("rect")
+            .data(data4)
+            .enter()
+            .append("rect")
+            .attr("x", 0)
+            .attr("y", d => yScale4(d.country))
+            .attr("width", d => xScale4(d.content))
+            .attr("height", yScale4.bandwidth())
+            .attr("fill", "#6ad49b")
+            .on("mouseover", (event, d) => {
+              d3.select(event.currentTarget).attr("fill", "#ff7f0e");
+              tooltip4.style("opacity", 1)
+                .html(`Country: ${d.country}<br>Content: ${d.content}`)
+                .style("left", (event.pageX + 10) + "px")
+                .style("top", (event.pageY + 10) + "px");
+            })
+            .on("mouseout", (event, d) => {
+              d3.select(event.currentTarget).attr("fill", "#6ad49b");
+              tooltip4.style("opacity", 0);
+            });
+
+          const yAxis4 = d3.axisLeft(yScale4);
+
+          svg4.append("g")
+            .call(yAxis4);
           break;
         default:
           chart.append('p').text('No chart content available');

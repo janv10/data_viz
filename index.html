@@ -13,7 +13,7 @@
 
     .chart {
       width: 900px;
-      height: 700px;
+      height: 600px;
       background-color: #f7f7f7;
       border: 1px solid #ccc;
       border: 1px solid #f7f7f7;
@@ -306,160 +306,7 @@
           break;
 
         case 3:
-          const svg3 = chart.select("svg");
-          const width3 = +svg3.attr("width");
-          const height3 = +svg3.attr("height");
-
-          const projection3 = d3.geoRobinson()
-            .scale(130)
-            .translate([width3 / 2, height3 / 2]);
-
-          const path3 = d3.geoPath().projection(projection3);
-
-          const data3 = d3.map();
-          const worldmap3 = "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson";
-          const worldpopulation3 = "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world_population.csv";
-
-          const colorScale3 = d3.scaleThreshold()
-            .domain([100000, 1000000, 10000000, 30000000, 100000000, 500000000])
-            .range(d3.schemeOrRd[7]);
-
-          const tooltip3 = d3.select("body")
-            .append("div")
-            .attr("class", "tooltip")
-            .style("opacity", 0);
-
-          d3.queue()
-            .defer(d3.json, worldmap3)
-            .defer(d3.csv, worldpopulation3, function (d) {
-              data3.set(d.code, +d.pop);
-            })
-            .await(ready3);
-
-          function ready3(error, topo) {
-            const mouseOver3 = function (d) {
-              d3.selectAll(".Country")
-                .transition()
-                .duration(200)
-                .style("opacity", .5)
-                .style("stroke", "transparent");
-              d3.select(this)
-                .transition()
-                .duration(200)
-                .style("opacity", 1)
-                .style("stroke", "black");
-              tooltip3.style("left", (d3.event.pageX + 15) + "px")
-                .style("top", (d3.event.pageY - 28) + "px")
-                .transition().duration(400)
-                .style("opacity", 1)
-                .text(d.properties.name + ': ' + Math.round((d.total / 1000000) * 10) / 10 + ' mio.');
-            }
-
-            const mouseLeave3 = function () {
-              d3.selectAll(".Country")
-                .transition()
-                .duration(200)
-                .style("opacity", 1)
-                .style("stroke", "transparent");
-              tooltip3.transition().duration(300)
-                .style("opacity", 0);
-            }
-
-            const world3 = svg3.append("g")
-              .attr("class", "world");
-
-            world3.selectAll("path")
-              .data(topo.features)
-              .enter()
-              .append("path")
-              .attr("d", path3)
-              .attr("data-name", function (d) {
-                return d.properties.name;
-              })
-              .attr("fill", function (d) {
-                d.total = data3.get(d.id) || 0;
-                return colorScale3(d.total);
-              })
-              .style("stroke", "transparent")
-              .attr("class", function (d) {
-                return "Country";
-              })
-              .attr("id", function (d) {
-                return d.id;
-              })
-              .style("opacity", 1)
-              .on("mouseover", mouseOver3)
-              .on("mouseleave", mouseLeave3)
-              .on("click", click3);
-
-            const legend3 = svg3.append("g")
-              .attr("id", "legend3");
-
-            const legend_entry3 = legend3.selectAll("g.legend_entry")
-              .data(colorScale3.range().map(function (d) {
-                d = colorScale3.invertExtent(d);
-                if (d[0] == null) d[0] = colorScale3.domain()[0];
-                if (d[1] == null) d[1] = colorScale3.domain()[1];
-                return d;
-              }))
-              .enter().append("g")
-              .attr("class", "legend_entry");
-
-            const ls_w3 = 20,
-              ls_h3 = 20;
-
-            legend_entry3.append("rect")
-              .attr("x", 20)
-              .attr("y", function (d, i) {
-                return height3 - (i * ls_h3) - 2 * ls_h3;
-              })
-              .attr("width", ls_w3)
-              .attr("height", ls_h3)
-              .style("fill", function (d) {
-                return colorScale3(d[0]);
-              })
-              .style("opacity", 0.8);
-
-            legend_entry3.append("text")
-              .attr("x", 50)
-              .attr("y", function (d, i) {
-                return height3 - (i * ls_h3) - ls_h3 - 6;
-              })
-              .text(function (d, i) {
-                if (i === 0) return "< " + d[1] / 1000000 + " m";
-                if (d[1] < d[0]) return d[0] / 1000000 + " m +";
-                return d[0] / 1000000 + " m - " + d[1] / 1000000 + " m";
-              });
-          }
-
-          function click3(d) {
-            var x3, y3, k3;
-
-            if (d && centered !== d) {
-              var centroid = path3.centroid(d);
-              x3 = -(centroid[0] * 6);
-              y3 = (centroid[1] * 6);
-              k3 = 3;
-              centered = d;
-            } else {
-              x3 = 0;
-              y3 = 0;
-              k3 = 1;
-              centered = null;
-            }
-
-            world3.selectAll("path")
-              .classed("active", centered && function (d) {
-                return d === centered;
-              });
-
-            world3.transition()
-              .duration(750)
-              .attr("transform", "translate(" + x3 + "," + y3 + ") scale(" + k3 + ")");
-          }
-          break;
-        case 4:
-          const data4 = [
+        const data4 = [
             { country: "USA", content: 2430 },
             { country: "India", content: 345 },
             { country: "UK", content: 34 },
@@ -526,8 +373,83 @@
             .call(yAxis4);
 
           break;
+          
+        case 4:
+        const geojson = {
+            type: "FeatureCollection",
+            features: [
+              { type: "Feature", properties: { name: "Country A" }, geometry: { type: "Polygon", coordinates: [[[-10, -10], [10, -10], [10, 10], [-10, 10], [-10, -10]]] } },
+              { type: "Feature", properties: { name: "Country B" }, geometry: { type: "Polygon", coordinates: [[[-10, -10], [10, -10], [10, 10], [-10, 10], [-10, -10]]] } },
+              { type: "Feature", properties: { name: "Country C" }, geometry: { type: "Polygon", coordinates: [[[-10, -10], [10, -10], [10, 10], [-10, 10], [-10, -10]]] } }
+            ]
+          };
+
+          // Get the data for the number of content from each country
+          const data3 = [
+            { country: "Country A", count: 10 },
+            { country: "Country B", count: 20 },
+            { country: "Country C", count: 5 }
+            // Add more data points...
+          ];
+
+          // Set up the map dimensions
+          const width3 = 900;
+          const height3 = 600;
+
+          // Create an SVG element
+          const svg3 = d3.select("#chart3")
+            .append("svg")
+            .attr("width", width3)
+            .attr("height", height3);
+
+          // Create a projection for the map
+          const projection = d3.geoMercator()
+            .fitSize([width3, height3], geojson);
+
+          // Create a path generator
+          const path = d3.geoPath()
+            .projection(projection);
+
+          // Set up a color scale for the choropleth map
+          const colorScale3 = d3.scaleSequential(d3.interpolateBlues)
+            .domain([0, d3.max(data3, d => d.count)]);
+
+          // Add the country shapes to the map
+          svg3.selectAll("path")
+            .data(geojson.features)
+            .enter()
+            .append("path")
+            .attr("d", path)
+            .attr("fill", d => {
+              // Find the matching data for each country
+              const countryData = data3.find(data => data.country === d.properties.name);
+              // Use the color scale for the fill color based on the count
+              return colorScale3(countryData.count);
+            })
+            .on("mouseover", (event, d) => {
+              const countryData = data3.find(data => data.country === d.properties.name);
+              d3.select(event.currentTarget).attr("fill", "#ff7f0e");
+              tooltip3.style("opacity", 1)
+                .html(`${d.properties.name}: ${countryData.count}`)
+                .style("left", (event.pageX + 10) + "px")
+                .style("top", (event.pageY + 10) + "px");
+            })
+            .on("mouseout", (event, d) => {
+              const countryData = data3.find(data => data.country === d.properties.name);
+              d3.select(event.currentTarget).attr("fill", colorScale3(countryData.count));
+              tooltip3.style("opacity", 0);
+            });
+
+          // Add tooltip element
+          const tooltip3 = d3.select("body")
+            .append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
+          break;
 
         default:
+        
           chart.append('p').text('No chart content available');
       }
     }

@@ -72,12 +72,10 @@
     <button class="button" onclick="showChart(1)">1</button>
     <button class="button" onclick="showChart(2)">2</button>
     <button class="button" onclick="showChart(3)">3</button>
-    <button class="button" onclick="showChart(4)">4</button>
   </div>
   <div class="chart" id="chart1"></div>
   <div class="chart" id="chart2"></div>
   <div class="chart" id="chart3"></div>
-  <div class="chart" id="chart4"></div>
 
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script>
@@ -193,7 +191,8 @@
 
           const root = pack(data);
 
-          const node = svg.selectAll("circle")
+          const node = svg
+            .selectAll("circle")
             .data(root.leaves())
             .join("circle")
             .attr("class", "node")
@@ -202,33 +201,34 @@
             .attr("r", d => d.r)
             .attr("fill", d => color(d.data.category))
             .on("mouseover", function (event, d) {
-              d3.select(this).attr("fill", "#E50914")
+              d3.select(this)
+                .attr("fill", "#E50914")
                 .transition()
                 .duration(100)
                 .attr("r", d => d.r + 10);
+
+              // Show label when hovering over the bubble
               tooltip.style("opacity", 1)
                 .html(`${d.data.category}: ${d.data.count}`)
-                .attr("x", width - 10) // Set x position of tooltip (right corner)
-                .attr("y", 15) // Set y position of tooltip (top corner)
-                .style("text-anchor", "end") // Align text to the right
+                .attr("x", d.x)
+                .attr("y", d.y) // Adjust the label's position above the bubble
+                .style("text-anchor", "middle") // Align text to the middle
                 .style("pointer-events", "none") // Prevent tooltip from blocking mouse interactions
                 .style("font-size", "16px");
-
-
             })
             .on("mouseout", function (event, d) {
-              d3.select(this).attr("fill", d => color(d.data.category))
+              d3.select(this)
+                .attr("fill", d => color(d.data.category))
                 .transition()
                 .duration(100)
                 .attr("r", d => d.r);
 
+              // Hide the label when not hovering over the bubble
               tooltip.style("opacity", 0);
-
-  
             });
 
           // Add labels to the bubbles
-          const labels = svg.selectAll("text")
+          /*const labels = svg.selectAll("text")
             .data(root.leaves())
             .join("text")
             .attr("class", "label")
@@ -238,7 +238,7 @@
             .attr("dominant-baseline", "middle")
             .attr("fill", "#000")
             .style("font-size", "12px")
-            .text(d => d.data.category);
+            .text(d => d.data.category);*/
 
           // Add tooltip element within the chart
           const tooltip = svg.append("text")
@@ -431,79 +431,6 @@
 
           break;
 
-        case 4:
-          const geojson = {
-            type: "FeatureCollection",
-            features: [
-              { type: "Feature", properties: { name: "Country A" }, geometry: { type: "Polygon", coordinates: [[[-10, -10], [10, -10], [10, 10], [-10, 10], [-10, -10]]] } },
-              { type: "Feature", properties: { name: "Country B" }, geometry: { type: "Polygon", coordinates: [[[-10, -10], [10, -10], [10, 10], [-10, 10], [-10, -10]]] } },
-              { type: "Feature", properties: { name: "Country C" }, geometry: { type: "Polygon", coordinates: [[[-10, -10], [10, -10], [10, 10], [-10, 10], [-10, -10]]] } }
-            ]
-          };
-
-          // Get the data for the number of content from each country
-          const data3 = [
-            { country: "Country A", count: 10 },
-            { country: "Country B", count: 20 },
-            { country: "Country C", count: 5 }
-            // Add more data points...
-          ];
-
-          // Set up the map dimensions
-          const width3 = 900;
-          const height3 = 600;
-
-          // Create an SVG element
-          const svg3 = d3.select("#chart3")
-            .append("svg")
-            .attr("width", width3)
-            .attr("height", height3);
-
-          // Create a projection for the map
-          const projection = d3.geoMercator()
-            .fitSize([width3, height3], geojson);
-
-          // Create a path generator
-          const path = d3.geoPath()
-            .projection(projection);
-
-          // Set up a color scale for the choropleth map
-          const colorScale3 = d3.scaleSequential(d3.interpolateBlues)
-            .domain([0, d3.max(data3, d => d.count)]);
-
-          // Add the country shapes to the map
-          svg3.selectAll("path")
-            .data(geojson.features)
-            .enter()
-            .append("path")
-            .attr("d", path)
-            .attr("fill", d => {
-              // Find the matching data for each country
-              const countryData = data3.find(data => data.country === d.properties.name);
-              // Use the color scale for the fill color based on the count
-              return colorScale3(countryData.count);
-            })
-            .on("mouseover", (event, d) => {
-              const countryData = data3.find(data => data.country === d.properties.name);
-              d3.select(event.currentTarget).attr("fill", "#ff7f0e");
-              tooltip3.style("opacity", 1)
-                .html(`${d.properties.name}: ${countryData.count}`)
-                .style("left", (event.pageX + 10) + "px")
-                .style("top", (event.pageY + 10) + "px");
-            })
-            .on("mouseout", (event, d) => {
-              const countryData = data3.find(data => data.country === d.properties.name);
-              d3.select(event.currentTarget).attr("fill", colorScale3(countryData.count));
-              tooltip3.style("opacity", 0);
-            });
-
-          // Add tooltip element
-          const tooltip3 = d3.select("body")
-            .append("div")
-            .attr("class", "tooltip")
-            .style("opacity", 0);
-
-          break;
 
         default:
 

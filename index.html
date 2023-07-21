@@ -12,8 +12,8 @@
     }
 
     .chart {
-      width: 900px;
-      height: 600px;
+      width: 850px;
+      height: 595px;
       background-color: #f7f7f7;
       border: 1px solid #ccc;
       border: 1px solid #f7f7f7;
@@ -61,6 +61,25 @@
       width: 900px;
       height: 600px;
     }
+
+
+    .content-container {
+      display: flex;
+    }
+
+    .chart {
+      flex: 1;
+      margin-right: 20px;
+    }
+
+    .example-paragraph {
+      display: none;
+      flex: 1;
+    }
+
+    .show-paragraph {
+      display: block;
+    }
   </style>
 
 
@@ -73,9 +92,15 @@
     <button class="button" onclick="showChart(2)">2</button>
     <button class="button" onclick="showChart(3)">3</button>
   </div>
-  <div class="chart" id="chart1"></div>
-  <div class="chart" id="chart2"></div>
-  <div class="chart" id="chart3"></div>
+  <div class="content-container">
+    <div class="chart" id="chart1"></div>
+    <div class="chart" id="chart2"></div>
+    <div class="chart" id="chart3"></div>
+    <p class="example-paragraph" id="examplePara">Example Paragraph for Chart 1</p>
+    <p class="example-paragraph" id="examplePara2">Example Paragraph for Chart 2</p>
+    <p class="example-paragraph" id="examplePara3">Example Paragraph for Chart 3</p>
+
+  </div>
 
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script>
@@ -97,11 +122,31 @@
       // Clear existing content
       chart.html('');
 
+      // Show/hide annotation based on the selected chart number
+      const examplePara = document.getElementById('examplePara');
+      if (chartNumber === 1) {
+        examplePara.classList.add('show-paragraph');
+      } else {
+        examplePara.classList.remove('show-paragraph');
+      }
+
+      const examplePara2 = document.getElementById('examplePara2');
+      if (chartNumber === 2) {
+        examplePara2.classList.add('show-paragraph');
+      } else {
+        examplePara2.classList.remove('show-paragraph');
+      }
+
+      const examplePara3 = document.getElementById('examplePara3');
+      if (chartNumber === 3) {
+        examplePara3.classList.add('show-paragraph');
+      } else {
+        examplePara3.classList.remove('show-paragraph');
+      }
 
       // Generate content based on the chart number
       switch (chartNumber) {
         case 1:
-          //chart.append('p').text('Pie Chart');
 
           const data = [
             { 'category': 'International TV Shows', 'count': 966 },
@@ -244,6 +289,14 @@
           const tooltip = svg.append("text")
             .attr("class", "tooltip")
             .style("opacity", 0);
+
+            svg.append("text")
+        .attr("x", 10)
+        .attr("y", 20)
+        .style("fill", "red")
+        .style("font-size", "12px")
+        .text("Hover over the bubbles to view data");
+      break;
 
           break;
 

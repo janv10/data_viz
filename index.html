@@ -84,7 +84,7 @@
       display: block;
     }
 
-    .display-4{
+    .display-4 {
       color: white;
     }
   </style>
@@ -153,7 +153,7 @@
         examplePara3.classList.remove('show-paragraph');
       }
 
-      
+
 
       // Generate content based on the chart number
       switch (chartNumber) {
@@ -213,12 +213,12 @@
 
           const netflixColors = [
             "#69A094", "#A3DDCE", "#B63678", "#12E3EA", "#E7742F",
-            "#b280fa", "#54AAD4", "#62EBCD", "#2E971A","#B2E002",
-            "#8089AF","#B444C0", "#3A05F9","#AFCA50","#4996C0",
+            "#b280fa", "#54AAD4", "#62EBCD", "#2E971A", "#B2E002",
+            "#8089AF", "#B444C0", "#3A05F9", "#AFCA50", "#4996C0",
             "#D4C6E0", "#6B8D6A", "#B2B263", "#CF9751", "#A2A211",
-            "#EC9CFA", "#A4FA25","#3415D4", "#23a279",  "#bd2228", 
-            "#379140", "#050c73", "#96ad71", "#c83375", "#380b23", 
-            "#ebcdfb", "#5cdae0", "#feda26", "#e00a9b", "#54974f", 
+            "#EC9CFA", "#A4FA25", "#3415D4", "#23a279", "#bd2228",
+            "#379140", "#050c73", "#96ad71", "#c83375", "#380b23",
+            "#ebcdfb", "#5cdae0", "#feda26", "#e00a9b", "#54974f",
             "#1085c3", "#3766e9", "#e1be11"
           ];
 
@@ -431,6 +431,55 @@
             .style("font-size", "18px")
             .text("Number of TV Shows and Movies Added Over the Years");
 
+          // Append the legend group (g)
+          const legend = svg2.append("g")
+            .attr("class", "legend")
+            .attr("transform", `translate(${width2 - 10}, ${height2 - -60})`); // Adjust the position as needed
+          // Add a border rectangle around the legend
+          legend.append("rect")
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("width", 120)
+            .attr("height", 65)
+            .attr("stroke", "#ccc") // Border color
+            .attr("fill", "none");
+
+          // Add text label for the legend title
+          legend.append("text")
+            .attr("x", 5)
+            .attr("y", -10)
+            .attr("font-weight", "bold")
+            .text("Legend:");
+
+          // Add a rectangle to represent "TV Show" in the legend
+          legend.append("rect")
+            .attr("x", 10)
+            .attr("y", 10)
+            .attr("width", 20)
+            .attr("height", 20)
+            .attr("fill", "#a678de"); // Purple color for "TV Show"
+
+          // Add text label for "TV Show"
+          legend.append("text")
+            .attr("x", 35)
+            .attr("y", 25)
+            .text("TV Show");
+
+          // Add a rectangle to represent "Movie" in the legend
+          legend.append("rect")
+            .attr("x", 10)
+            .attr("y", 40)
+            .attr("width", 20)
+            .attr("height", 20)
+            .attr("fill", "#6ad49b"); // Green color for "Movie"
+
+          // Add text label for "Movie"
+          legend.append("text")
+            .attr("x", 35)
+            .attr("y", 55)
+            .text("Movie");
+
+
           break;
 
         case 3:
@@ -439,8 +488,8 @@
             { country: "India", content: 697 },
             { country: "United Kingdom", content: 336 },
             { country: "Japan", content: 168 },
-            { country: "South Korea", content: 133 }, 
-            { country: "Canada", content: 139 }, 
+            { country: "South Korea", content: 133 },
+            { country: "Canada", content: 139 },
             { country: "Spain", content: 113 },
             { country: "France", content: 85 },
             { country: "Mexico", content: 80 },

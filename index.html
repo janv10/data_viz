@@ -104,6 +104,8 @@
 
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script>
+
+
     // Show the specified chart based on the button click
     function showChart(chartNumber) {
       // Hide all charts
@@ -201,29 +203,14 @@
             .attr("height", height);
 
           const netflixColors = [
-            "#69A094",
-            "#A3DDCE",
-            "#B63678",
-            "#12E3EA",
-            "#E7742F",
-            "#1ED9E6",
-            "#54AAD4",
-            "#62EBCD",
-            "#2E971A",
-            "#B2E002",
-            "#8089AF",
-            "#B444C0",
-            "#3A05F9",
-            "#AFCA50",
-            "#4996C0",
-            "#D4C6E0",
-            "#6B8D6A",
-            "#B2B263",
-            "#CF9751",
-            "#A2A211",
-            "#EC9CFA",
-            "#A4FA25",
-            "#3415D4"
+            "#69A094", "#A3DDCE", "#B63678", "#12E3EA", "#E7742F",
+            "#b280fa", "#54AAD4", "#62EBCD", "#2E971A","#B2E002",
+            "#8089AF","#B444C0", "#3A05F9","#AFCA50","#4996C0",
+            "#D4C6E0", "#6B8D6A", "#B2B263", "#CF9751", "#A2A211",
+            "#EC9CFA", "#A4FA25","#3415D4", "#23a279",  "#bd2228", 
+            "#379140", "#050c73", "#96ad71", "#c83375", "#380b23", 
+            "#ebcdfb", "#5cdae0", "#feda26", "#e00a9b", "#54974f", 
+            "#1085c3", "#3766e9", "#e1be11"
           ];
 
           const color = d3.scaleOrdinal().range(netflixColors);
@@ -290,14 +277,12 @@
             .attr("class", "tooltip")
             .style("opacity", 0);
 
-            svg.append("text")
-        .attr("x", 10)
-        .attr("y", 20)
-        .style("fill", "red")
-        .style("font-size", "12px")
-        .text("Hover over the bubbles to view data");
-      break;
-
+          svg.append("text")
+            .attr("x", 10)
+            .attr("y", 20)
+            .style("fill", "red")
+            .style("font-size", "12px")
+            .text("Hover over the bubbles to view data");
           break;
 
         case 2:
@@ -325,9 +310,9 @@
             { year: 2019, type: "Movie", count: 1367 },
           ];
 
-          const margin = { top: 20, right: 20, bottom: 50, left: 50 };
-          const width2 = 600 - margin.left - margin.right;
-          const height2 = 400 - margin.top - margin.bottom;
+          const margin = { top: 90, right: 80, bottom: 50, left: 80 };
+          const width2 = 800 - margin.left - margin.right;
+          const height2 = 500 - margin.top - margin.bottom;
 
           const xScale2 = d3.scaleLinear()
             .domain(d3.extent(data2, d => d.year))
@@ -387,7 +372,7 @@
             .join("circle")
             .attr("cx", d => xScale2(d.year))
             .attr("cy", d => yScale2(d.count))
-            .attr("r", 5)
+            .attr("r", 8)
             .attr("fill", d => colorScale2(d.type))
             .on("mouseover", (event, d) => {
               d3.select(event.currentTarget).attr("fill", "#ff7f0e");
@@ -413,22 +398,51 @@
           svg2.append("g")
             .call(yAxis2);
 
+
+          // Add axis labels
+          svg2.append("text")
+            .attr("x", width2 / 2)
+            .attr("y", height2 + margin.bottom - 10)
+            .style("text-anchor", "middle")
+            .text("Year");
+
+
+          svg2.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("x", -height2 / 2)
+            .attr("y", -margin.left + 35)
+            .style("text-anchor", "middle")
+            .text("Number of Movies/TV Shows Added");
+
+          // Add title
+          svg2.append("text")
+            .attr("x", width2 / 2)
+            .attr("y", -margin.top / 2)
+            .style("text-anchor", "middle")
+            .style("font-size", "18px")
+            .text("Number of TV Shows and Movies Added Over the Years");
+
           break;
 
         case 3:
           const data4 = [
-            { country: "USA", content: 2430 },
-            { country: "India", content: 345 },
-            { country: "UK", content: 34 },
-            { country: "France", content: 225 },
-            { country: "Canada", content: 14 }
+            { country: "United States", content: 1907 },
+            { country: "India", content: 697 },
+            { country: "United Kingdom", content: 336 },
+            { country: "Japan", content: 168 },
+            { country: "South Korea", content: 133 }, 
+            { country: "Canada", content: 139 }, 
+            { country: "Spain", content: 113 },
+            { country: "France", content: 85 },
+            { country: "Mexico", content: 80 },
+            { country: "Turkey", content: 78 }
           ];
 
           data4.sort((a, b) => b.content - a.content); // Sort the data in descending order
 
-          const margin4 = { top: 20, right: 20, bottom: 50, left: 100 };
-          const width4 = 600 - margin4.left - margin4.right;
-          const height4 = 400 - margin4.top - margin4.bottom;
+          const margin4 = { top: 80, right: 40, bottom: 50, left: 130 };
+          const width4 = 800 - margin4.left - margin4.right;
+          const height4 = 550 - margin4.top - margin4.bottom;
 
           const svg4 = chart.append("svg")
             .attr("width", width4 + margin4.left + margin4.right)
@@ -481,6 +495,37 @@
 
           svg4.append("g")
             .call(yAxis4);
+
+
+          // Add x-axis, y-axis, and title
+          svg4.append("g")
+            .attr("transform", `translate(0,${height4})`)
+            .call(d3.axisBottom(xScale4));
+
+          svg4.append("g")
+            .call(d3.axisLeft(yScale4));
+
+          svg4.append("text")
+            .attr("x", width4 / 2)
+            .attr("y", -margin4.top / 2)
+            .style("text-anchor", "middle")
+            .style("font-size", "18px")
+            .text("Top 10 Countries with the Most Content");
+
+          svg4.append("text")
+            .attr("x", width4 / 2)
+            .attr("y", height4 + margin4.bottom)
+            .style("text-anchor", "middle")
+            .style("font-size", "14px")
+            .text("Total Content (Movies and TV Shows)");
+
+          svg4.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("x", -height4 / 2)
+            .attr("y", -margin4.left + 30)
+            .style("text-anchor", "middle")
+            .style("font-size", "14px")
+            .text("Countries");
 
           break;
 

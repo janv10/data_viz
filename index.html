@@ -9,6 +9,8 @@
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 20px;
+      background-color: black;
+
     }
 
     .chart {
@@ -75,10 +77,15 @@
     .example-paragraph {
       display: none;
       flex: 1;
+      color: white;
     }
 
     .show-paragraph {
       display: block;
+    }
+
+    .display-4{
+      color: white;
     }
   </style>
 
@@ -145,6 +152,8 @@
       } else {
         examplePara3.classList.remove('show-paragraph');
       }
+
+      
 
       // Generate content based on the chart number
       switch (chartNumber) {

@@ -42,6 +42,10 @@
       margin-right: 10px;
     }
 
+    .checkbox {
+      color: white
+    }
+
     .button:hover {
       background-color: #c20811;
     }
@@ -87,13 +91,18 @@
     .display-4 {
       color: white;
     }
+
+    .legend-container {
+      display: none;
+      color: white; 
+      
+    }
   </style>
 
 
 </head>
 
-<body>
-  <h1 class="display-4"> Let's explore Netflix!</h1>
+<h1 class="display-4"> Let's explore Netflix!</h1>
   <div class="button-container">
     <button class="button" onclick="showChart(1)">1</button>
     <button class="button" onclick="showChart(2)">2</button>
@@ -106,26 +115,39 @@
     <p class="example-paragraph" id="examplePara">Example Paragraph for Chart 1</p>
     <p class="example-paragraph" id="examplePara2">Example Paragraph for Chart 2</p>
     <p class="example-paragraph" id="examplePara3">Example Paragraph for Chart 3</p>
-
+    <div class="legend-container">
+      <label>
+        <input type="checkbox" id="tvShowCheckbox" checked>
+        TV Show
+      </label>
+      <label>
+        <input type="checkbox" id="movieCheckbox" checked>
+        Movie
+      </label>
+    </div>
   </div>
+
 
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script>
 
 
     // Show the specified chart based on the button click
-    function showChart(chartNumber) {
-      // Hide all charts
+  function showChart(chartNumber) {
+      // Hide all charts and legend container
       d3.selectAll('.chart').style('display', 'none');
+      d3.select('.legend-container').style('display', 'none');
 
-      // Show the selected chart
+      // Show the selected chart and legend container
       const selectedChart = d3.select(`#chart${chartNumber}`);
       selectedChart.style('display', 'block');
+      if (chartNumber === 2) {
+        d3.select('.legend-container').style('display', 'block');
+      }
 
       // Generate the chart content based on the selected chart number
       generateChartContent(selectedChart, chartNumber);
     }
-
     // Generate the content for each chart based on the chart number
     function generateChartContent(chart, chartNumber) {
       // Clear existing content
@@ -153,6 +175,8 @@
         examplePara3.classList.remove('show-paragraph');
       }
 
+      // Declare the 'legend' variable outside the switch case block
+      let legend;
 
 
       // Generate content based on the chart number
@@ -347,29 +371,29 @@
           const dataTVShow = data2.filter(d => d.type === "TV Show");
           const dataMovie = data2.filter(d => d.type === "Movie");
 
-          // Create line generators for each category
-          const lineTVShow = d3.line()
-            .x(d => xScale2(d.year))
-            .y(d => yScale2(d.count));
+          /// Create line generators for each category
+const lineTVShow = d3.line()
+  .x(d => xScale2(d.year))
+  .y(d => yScale2(d.count));
 
-          const lineMovie = d3.line()
-            .x(d => xScale2(d.year))
-            .y(d => yScale2(d.count));
+const lineMovie = d3.line()
+  .x(d => xScale2(d.year))
+  .y(d => yScale2(d.count));
 
-          // Append the lines
-          svg2.append("path")
-            .datum(dataTVShow)
-            .attr("fill", "none")
-            .attr("stroke", "#a678de")
-            .attr("stroke-width", 2)
-            .attr("d", lineTVShow);
+// Append the lines
+const pathTVShow = svg2.append("path")
+  .datum(dataTVShow)
+  .attr("fill", "none")
+  .attr("stroke", "#a678de")
+  .attr("stroke-width", 2)
+  .attr("d", lineTVShow);
 
-          svg2.append("path")
-            .datum(dataMovie)
-            .attr("fill", "none")
-            .attr("stroke", "#6ad49b")
-            .attr("stroke-width", 2)
-            .attr("d", lineMovie);
+const pathMovie = svg2.append("path")
+  .datum(dataMovie)
+  .attr("fill", "none")
+  .attr("stroke", "#6ad49b")
+  .attr("stroke-width", 2)
+  .attr("d", lineMovie);
 
           // Append the circles
           const circles2 = svg2.selectAll("circle")
@@ -427,7 +451,7 @@
             .style("font-size", "18px")
             .text("Number of TV Shows and Movies Added Over the Years");
 
-            svg2.append("text")
+          svg2.append("text")
             .attr("x", width2 / 2)
             .attr("y", -20)
             .style("text-anchor", "middle")
@@ -483,6 +507,40 @@
             .attr("y", 55)
             .text("Movie");
 
+          // JavaScript code for checkboxes and chart update
+          let showTVShows = true;
+          let showMovies = true;
+
+          function updateChart() {
+            // Hide/show the lines and circles based on the legend
+            pathTVShow.attr("display", showTVShows ? "inline" : "none");
+            pathMovie.attr("display", showMovies ? "inline" : "none");
+
+            // Toggle circles visibility
+            circles2.attr("display", function (d) {
+              return (d.type === "TV Show" && showTVShows) || (d.type === "Movie" && showMovies)
+                ? "inline"
+                : "none";
+            });
+          }
+
+          // Add event listeners to the checkboxes
+          document.getElementById("tvShowCheckbox").addEventListener("change", function () {
+            showTVShows = this.checked;
+            updateChart();
+          });
+
+          document.getElementById("movieCheckbox").addEventListener("change", function () {
+            showMovies = this.checked;
+            updateChart();
+          });
+
+          // Initial setup: Show both TV Show and Movie data
+          document.getElementById("tvShowCheckbox").checked = true;
+          document.getElementById("movieCheckbox").checked = true;
+
+          // Update the chart initially to show both TV Show and Movie data
+          updateChart();
 
           break;
 

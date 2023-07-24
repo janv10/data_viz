@@ -583,16 +583,25 @@
             .attr("y", d => yScaleNew(d.category))
             .attr("width", d => xScaleNew(d.content))
             .attr("height", yScaleNew.bandwidth())
-            .attr("fill", "#6ad49b")
+            .attr("fill", d => {
+              if (d.category === 'TV Show') {
+                return "#0843e2"; // color for TV Show
+              } if (d.category === 'Movie') {
+                return "#007b5e"; // color for Movie
+              }
+            })
             .on("mouseover", (event, d) => {
               d3.select(event.currentTarget).attr("fill", "#ff7f0e");
               tooltip4.style("opacity", 1)
-                .html(`Category: ${d.category}<br>Content: ${d.content}`)
+                .html(d.category === 'TV Show'
+                  ? `Category: ${d.category}<br>TV Shows: ${d.content}`
+                  : `Category: ${d.category}<br>Movies: ${d.content}`)
                 .style("left", (event.pageX + 10) + "px")
                 .style("top", (event.pageY + 10) + "px");
             })
             .on("mouseout", (event, d) => {
-              d3.select(event.currentTarget).attr("fill", "#6ad49b");
+              // On mouse out, return to the original color based on category
+              d3.select(event.currentTarget).attr("fill", d.category === 'TV Show' ? "#0843e2" : "#007b5e");
               tooltip4.style("opacity", 0);
             })
             .on("click", (event, d) => {

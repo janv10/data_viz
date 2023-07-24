@@ -140,6 +140,8 @@
   <div class="chart" id="chart1"></div>
   <div class="chart" id="chart2"></div>
   <div class="chart" id="chart3"></div>
+  <div class="chart" id="chart4"></div>
+
   <p class="example-paragraph" id="examplePara">Example Paragraph for Chart 1</p>
   <p class="example-paragraph" id="examplePara2"> </p>
   <p class="example-paragraph" id="examplePara3">Example Paragraph for Chart 3</p>
@@ -528,180 +530,106 @@
         updateChart();
 
         break;
-      case 3:
-      const data4 = [
-    { country: "United States", content: 1907, tvshow: 953, movie: 954},
-    { country: "India", content: 697, tvshow: 14, movie: 10},
-    { country: "United Kingdom", content: 336 },
-    { country: "Japan", content: 168 },
-    { country: "South Korea", content: 133 },
-    { country: "Canada", content: 139 },
-    { country: "Spain", content: 113 },
-    { country: "France", content: 85 },
-    { country: "Mexico", content: 80 },
-    { country: "Turkey", content: 78 }
-  ];
+        case 3: 
+        var data = [
+      { country: "United States", content: 1907, tvshows: 953, movies: 954 },
+      { country: "India", content: 697 },
+      { country: "United Kingdom", content: 336 },
+      { country: "Japan", content: 168 },
+      { country: "South Korea", content: 133 },
+      { country: "Canada", content: 139 },
+      { country: "Spain", content: 113 },
+      { country: "France", content: 85 },
+      { country: "Mexico", content: 80 },
+      { country: "Turkey", content: 78 }
+    ];
 
-  data4.sort((a, b) => b.content - a.content); // Sort the data in descending order
+    var drilldownData = {
+      "United States": [
+        { category: "TV Shows", value: 953 },
+        { category: "Movies", value: 954 }
+      ],
+      "TV Shows": [
+        { category: "Comedy", value: 487 },
+        { category: "Drama", value: 286 },
+        { category: "Reality", value: 180 }
+      ],
+      "Movies": [
+        { category: "Action", value: 524 },
+        { category: "Comedy", value: 352 },
+        { category: "Drama", value: 293 }
+      ]
+    };
 
-  const margin4 = { top: 80, right: 40, bottom: 50, left: 130 };
-  const width4 = 800 - margin4.left - margin4.right;
-  const height4 = 550 - margin4.top - margin4.bottom;
+    var currentData = data;
+    var currentCategory = "Country";
 
-  const svg4 = chart.append("svg")
-    .attr("width", width4 + margin4.left + margin4.right)
-    .attr("height", height4 + margin4.top + margin4.bottom)
-    .append("g")
-    .attr("transform", `translate(${margin4.left},${margin4.top})`);
+    // Create the base chart using D3.js
+    var svg = d3.select("#chart3")
+      .append("svg")
+      .attr("width", 800)
+      .attr("height", 400);
 
-  const xScale4 = d3.scaleLinear()
-    .domain([0, d3.max(data4, d => d.content)])
-    .range([0, width4]);
+    var margin = { top: 20, right: 20, bottom: 30, left: 40 };
+    var width = +svg.attr("width") - margin.left - margin.right;
+    var height = +svg.attr("height") - margin.top - margin.bottom;
 
-  const yScale4 = d3.scaleBand()
-    .domain(data4.map(d => d.country))
-    .range([0, height4])
-    .padding(0.1);
-
-  function updateChart3(newData) {
-    svg4.selectAll("*").remove();
-
-    const xScaleNew = d3.scaleLinear()
-      .domain([0, d3.max(newData, d => d.content)])
-      .range([0, width4]);
-
-    const yScaleNew = d3.scaleBand()
-      .domain(newData.map(d => d.category))
-      .range([0, height4])
+    var x = d3.scaleBand()
+      .rangeRound([0, width])
       .padding(0.1);
 
-     
+    var y = d3.scaleLinear()
+      .rangeRound([height, 0]);
 
-    svg4.selectAll("rect")
-      .data(newData)
-      .enter()
-      .append("rect")
-      .attr("x", 0)
-      .attr("y", d => yScaleNew(d.category))
-      .attr("width", d => xScaleNew(d.content))
-      .attr("height", yScaleNew.bandwidth())
-      .attr("fill", "#6ad49b")
-      .on("mouseover", (event, d) => {
-        d3.select(event.currentTarget).attr("fill", "#ff7f0e");
-        tooltip4.style("opacity", 1)
-          .html(`Category: ${d.category}<br>Content: ${d.content}`)
-          .style("left", (event.pageX + 10) + "px")
-          .style("top", (event.pageY + 10) + "px");
-      })
-      .on("mouseout", (event, d) => {
-        d3.select(event.currentTarget).attr("fill", "#6ad49b");
-        tooltip4.style("opacity", 0);
-      })
-      .on("click", (event, d) => {
-        tooltip4.style("opacity", 0); // Hide tooltip when a bar is clicked
-        showChart(3)
-    });
+    var g = svg.append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    svg4.append("g")
-      .attr("transform", `translate(0,${height4})`)
-      .call(d3.axisBottom(xScaleNew));
+    updateChart(currentData);
 
-    svg4.append("g")
-      .call(d3.axisLeft(yScaleNew));
+    function updateChart(data) {
+      x.domain(data.map(d => d.category));
+      y.domain([0, d3.max(data, d => d.value)]);
 
-      svg4.append("text")
-    .attr("transform", "rotate(-90)")
-    .attr("x", -height4 / 2)
-    .attr("y", -margin4.left + 30)
-    .style("text-anchor", "middle")
-    .style("font-size", "14px")
-    .text("Categories");
+      g.selectAll(".bar").remove();
 
-    svg4.append("text")
-    .attr("x", width4 / 2)
-    .attr("y", height4 + margin4.bottom)
-    .style("text-anchor", "middle")
-    .style("font-size", "14px")
-    .text("Number of TV Shows and Movies in ");
+      var bars = g.selectAll(".bar")
+        .data(data)
+        .enter().append("rect")
+        .attr("class", "bar")
+        .attr("x", d => x(d.category))
+        .attr("y", d => y(d.value))
+        .attr("width", x.bandwidth())
+        .attr("height", d => height - y(d.value))
+        .on("click", function(d) {
+          if (drilldownData[d.category]) {
+            currentData = drilldownData[d.category];
+            currentCategory = d.category;
+            updateChart(currentData);
+          }
+        });
 
+      bars.exit().remove();
 
-      svg4.append("text")
-    .attr("x", width4 / 2)
-    .attr("y", -margin4.top / 2)
-    .style("text-anchor", "middle")
-    .style("font-size", "18px")
-    .text("Content in " + d.country); // Use the country name in the title
+      svg.selectAll(".axis").remove();
 
-  }
+      g.append("g")
+        .attr("class", "axis axis--x")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
 
+      g.append("g")
+        .attr("class", "axis axis--y")
+        .call(d3.axisLeft(y).ticks(10, "s"));
 
-  const tooltip4 = d3.select("body")
-    .append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
-
-  const bars4 = svg4.selectAll("rect")
-  .data(data4)
-  .enter()
-  .append("rect")
-  .attr("x", 0)
-  .attr("y", d => yScale4(d.country))
-  .attr("width", d => xScale4(d.content))
-  .attr("height", yScale4.bandwidth())
-  .attr("fill", "#6ad49b")
-  .on("mouseover", (event, d) => {
-      d3.select(event.currentTarget).attr("fill", "#ff7f0e");
-      tooltip4.style("opacity", 1)
-        .html(`Country: ${d.country}<br>Content: ${d.content}`)
-        .style("left", (event.pageX + 10) + "px")
-        .style("top", (event.pageY + 10) + "px");
-    })
-  .on("mouseout", (event, d) => {
-      d3.select(event.currentTarget).attr("fill", "#6ad49b");
-      tooltip4.style("opacity", 0);
-    })
-  .on("click", (event, d) => {
-    tooltip4.style("opacity", 0); // Hide tooltip when a bar is clicked
-    if (d.tvshow !== undefined && d.movie !== undefined) {
-      const newData = [
-        { category: "TV Show", content: d.tvshow },
-        { category: "Movie", content: d.movie }
-      ];
-      updateChart3(newData);
+      g.append("text")
+        .attr("x", width / 2)
+        .attr("y", height + margin.bottom)
+        .attr("dy", "0.71em")
+        .attr("fill", "#000")
+        .text(currentCategory);
     }
-  });
 
-
-  svg4.append("g")
-    .attr("transform", `translate(0,${height4})`)
-    .call(d3.axisBottom(xScale4));
-
-  svg4.append("g")
-    .call(d3.axisLeft(yScale4));
-
-  svg4.append("text")
-    .attr("x", width4 / 2)
-    .attr("y", -margin4.top / 2)
-    .style("text-anchor", "middle")
-    .style("font-size", "18px")
-    .text("Top 10 Countries with the Most Content");
-
-  svg4.append("text")
-    .attr("x", width4 / 2)
-    .attr("y", height4 + margin4.bottom)
-    .style("text-anchor", "middle")
-    .style("font-size", "14px")
-    .text("Total Content (Movies and TV Shows)");
-
-  svg4.append("text")
-    .attr("transform", "rotate(-90)")
-    .attr("x", -height4 / 2)
-    .attr("y", -margin4.left + 30)
-    .style("text-anchor", "middle")
-    .style("font-size", "14px")
-    .text("Countries");
-
-        break;
+break;
 
 
       default:

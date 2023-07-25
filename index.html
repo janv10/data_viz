@@ -158,10 +158,8 @@
 </div>
 
 
-
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script>
-
 
   // Show the specified chart based on the button click
   function showChart(chartNumber) {
@@ -209,9 +207,6 @@
       examplePara3.classList.remove('show-paragraph');
     }
 
-    // Declare the 'legend' variable outside the switch case block
-    let legend;
-
     // Generate content based on the chart number
     switch (chartNumber) {
       case 1:
@@ -228,14 +223,14 @@
           { 'category': "Kids' TV", 'count': 313 },
           { 'category': 'Thrillers', 'count': 353 },
           { 'category': 'Crime TV Shows', 'count': 355 },
-          { 'category': 'Spanish-Language TV Shows', 'count': 114 },
+          { 'category': 'Spanish TV Shows', 'count': 114 },
           { 'category': 'Reality TV', 'count': 146 },
           { 'category': 'Action & Adventure', 'count': 532 },
           { 'category': 'TV Comedies', 'count': 425 },
           { 'category': 'Docuseries', 'count': 271 },
           { 'category': 'Children & Family Movies', 'count': 340 },
-          { 'category': 'Anime Series', 'count': 111 },
-          { 'category': 'Stand-Up Comedy & Talk Shows', 'count': 42 },
+          { 'category': 'Anime Shows', 'count': 111 },
+          { 'category': 'Talk Shows', 'count': 42 },
           { 'category': 'TV Dramas', 'count': 574 },
           { 'category': 'Romantic Movies', 'count': 338 },
           { 'category': 'Stand-Up Comedy', 'count': 273 },
@@ -261,8 +256,8 @@
           { 'category': 'TV Shows', 'count': 10 },
         ];
 
-        const width = 850;
-        const height = 600;
+        const width = 900;
+        const height = 620;
         const svg = d3.select("#chart1")
           .append("svg")
           .attr("width", width)
@@ -281,49 +276,52 @@
 
         const color = d3.scaleOrdinal().range(netflixColors);
 
-        const pack = data => d3.pack()
-          .size([width, height])
-          .padding(10) // Adjust the padding to increase bubble size
-          (d3.hierarchy({ children: data })
-            .sum(d => d.count));
+const pack = data => d3.pack()
+    .size([width, height])
+    .padding(20)
+    (d3.hierarchy({ children: data })
+        .sum(d => d.count));
 
-        const root = pack(data);
+const root = pack(data);
 
-        const node = svg
-          .selectAll("circle")
-          .data(root.leaves())
-          .join("circle")
-          .attr("class", "node")
-          .attr("cx", d => d.x)
-          .attr("cy", d => d.y)
-          .attr("r", d => d.r)
-          .attr("fill", d => color(d.data.category))
-          .on("mouseover", function (event, d) {
-            d3.select(this)
-              .attr("fill", d => color(d.data.category))
-              .transition()
-              .duration(100)
-              .attr("r", d => d.r + 10);
+const node = svg.selectAll(".node")
+    .data(root.leaves())
+    .join("g")
+    .attr("class", "node");
 
-            // Show label when hovering over the bubble
-            tooltip.style("opacity", 1)
-              .html(`${d.data.category}: ${d.data.count}`)
-              .attr("x", d.x)
-              .attr("y", d.y) // Adjust the label's position above the bubble
-              .style("text-anchor", "middle") // Align text to the middle
-              .style("pointer-events", "none") // Prevent tooltip from blocking mouse interactions
-              .style("font-size", "16px");
-          })
-          .on("mouseout", function (event, d) {
-            d3.select(this)
-              .attr("fill", d => color(d.data.category))
-              .transition()
-              .duration(100)
-              .attr("r", d => d.r);
+node.append("circle")
+    .attr("cx", d => d.x)
+    .attr("cy", d => d.y)
+    .attr("r", d => d.r)
+    .attr("fill", d => color(d.data.category));
 
-            // Hide the label when not hovering over the bubble
-            tooltip.style("opacity", 0);
-          });
+node.append("text")
+    .attr("x", d => d.x)
+    .attr("y", d => d.y + 4)
+    .style("text-anchor", "middle")
+    .style("font-size", "10px")
+    .text(d => `${d.data.count}`);
+
+node
+    .on("mouseover", function (event, d) {
+        d3.select(this).select("circle")
+            .transition()
+            .duration(100)
+            .attr("r", d => d.r + 10);
+
+        d3.select(this).select("text")
+            .text(d => `${d.data.category}`);
+    })
+    .on("mouseout", function (event, d) {
+        d3.select(this).select("circle")
+            .transition()
+            .duration(100)
+            .attr("r", d => d.r);
+
+        d3.select(this).select("text")
+            .text(d => `${d.data.count}`);
+    });
+
 
         // Add tooltip element within the chart
         const tooltip = svg.append("text")
@@ -331,20 +329,19 @@
           .style("opacity", 0);
 
         svg.append("text")
-          .attr("x", 145)
+          .attr("x", width / 2)
           .attr("y", 30)
-          //.style("fill", "#333") // Soft black color (change the hex code as desired)
-          .style("font-size", "18px") // Font size set to 18px
-          //.style("font-family", "Arial") // Font family set to Arial
+          .style("font-size", "18px") 
           .style("text-anchor", "middle")
           .text("Content Type of Netflix");
 
         svg.append("text")
-          .attr("x", 10)
+          .attr("x", width / 2 - 150)
           .attr("y", 50)
           .style("fill", "red")
           .style("font-size", "14px")
           .text("Hover over the bubbles to view more information");
+
         break;
 
       case 2:
@@ -460,14 +457,12 @@
         svg2.append("g")
           .call(yAxis2);
 
-
         // Add axis labels
         svg2.append("text")
           .attr("x", width2 / 2)
           .attr("y", height2 + margin.bottom - 10)
           .style("text-anchor", "middle")
           .text("Year");
-
 
         svg2.append("text")
           .attr("transform", "rotate(-90)")
@@ -484,6 +479,7 @@
           .style("font-size", "18px")
           .text("Number of TV Shows and Movies Added Over the Years");
 
+        // Add subtitle
         svg2.append("text")
           .attr("x", width2 / 2)
           .attr("y", -20)
@@ -530,16 +526,16 @@
         break;
       case 3:
         const data4 = [
-          { country: "United States", content: 1907, tvshow: 953, movie: 954 },
-          { country: "India", content: 697, tvshow: 14, movie: 10 },
-          { country: "United Kingdom", content: 336 },
-          { country: "Japan", content: 168 },
-          { country: "South Korea", content: 133 },
-          { country: "Canada", content: 139 },
-          { country: "Spain", content: 113 },
-          { country: "France", content: 85 },
-          { country: "Mexico", content: 80 },
-          { country: "Turkey", content: 78 }
+          { country: "United States", content: 1907, tvshow: 532, movie: 1375 },
+          { country: "India", content: 697, tvshow: 52, movie: 645 },
+          { country: "United Kingdom", content: 336, tvshow: 174, movie: 162 },
+          { country: "Japan", content: 168, tvshow: 124, movie: 44 },
+          { country: "South Korea", content: 133, tvshow: 101, movie: 32 },
+          { country: "Canada", content: 139, tvshow: 52, movie: 87 },
+          { country: "Spain", content: 113, tvshow: 35, movie: 78 },
+          { country: "France", content: 85, tvshow: 37, movie: 48 },
+          { country: "Mexico", content: 80, tvshow: 29, movie: 51 },
+          { country: "Turkey", content: 78, tvshow: 23, movie: 55 }
         ];
 
         data4.sort((a, b) => b.content - a.content); // Sort the data in descending order
@@ -594,8 +590,8 @@
               d3.select(event.currentTarget).attr("fill", "#ff7f0e");
               tooltip4.style("opacity", 1)
                 .html(d.category === 'TV Show'
-                  ? `Category: ${d.category}<br>TV Shows: ${d.content}`
-                  : `Category: ${d.category}<br>Movies: ${d.content}`)
+                  ? `Country: ${countryName}<br>Category: ${d.category}<br>TV Shows: ${d.content}`
+                  : `Country: ${countryName}<br>Category: ${d.category}<br>Movies: ${d.content}`)
                 .style("left", (event.pageX + 10) + "px")
                 .style("top", (event.pageY + 10) + "px");
             })
@@ -644,7 +640,7 @@
             .attr("y", -margin4.top / 2)
             .style("text-anchor", "middle")
             .style("font-size", "18px")
-            .text("Content in " + countryName); // Use the country name in the title
+            .text("Total Number of Content in " + countryName); // Use the country name in the title
         }
 
         const tooltip4 = d3.select("body")
@@ -714,9 +710,7 @@
 
         break;
 
-
       default:
-
         chart.append('p').text('No chart content available');
     }
   }

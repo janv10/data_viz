@@ -264,63 +264,63 @@
           .attr("height", height);
 
         const netflixColors = [
-          "#69A094", "#A3DDCE", "#B63678", "#12E3EA", "#E7742F",
-          "#b280fa", "#54AAD4", "#62EBCD", "#2E971A", "#B2E002",
-          "#8089AF", "#B444C0", "#3A05F9", "#AFCA50", "#4996C0",
-          "#D4C6E0", "#6B8D6A", "#B2B263", "#CF9751", "#A2A211",
-          "#EC9CFA", "#A4FA25", "#3415D4", "#23a279", "#bd2228",
-          "#379140", "#050c73", "#96ad71", "#c83375", "#380b23",
-          "#ebcdfb", "#5cdae0", "#feda26", "#e00a9b", "#54974f",
-          "#1085c3", "#3766e9", "#e1be11"
+          "#0081A7", "#00AFB9", "#00AFB9", "#FED9B7", "#F07167",
+          "#E0BBE4", "#FFEE93", "#FFD5C2", "#FFAAA6", "#B0E57C",
+          "#A4E2C6", "#E2F0CB", "#FFB5E8", "#FFD7D2", "#C9CBA3",
+          "#FFCDA3", "#FFE9A3", "#D4A5A5", "#B7D4A5", "#A5C7D4",
+          "#A5A8D4", "#CCB5E8", "#C5A3C6", "#FFA0A0", "#FFDFA0",
+          "#E8D3A8", "#B7B5D4", "#D3C5E8", "#D3B0A0", "#C5D4A3",
+          "#E8CCB5", "#E8A3A3", "#D4A0CC", "#B0CCD3", "#FFB5B5",
+          "#FFA0C2", "#A0FFC9"
         ];
 
         const color = d3.scaleOrdinal().range(netflixColors);
 
-const pack = data => d3.pack()
-    .size([width, height])
-    .padding(20)
-    (d3.hierarchy({ children: data })
-        .sum(d => d.count));
+        const pack = data => d3.pack()
+          .size([width, height])
+          .padding(20)
+          (d3.hierarchy({ children: data })
+            .sum(d => d.count));
 
-const root = pack(data);
+        const root = pack(data);
 
-const node = svg.selectAll(".node")
-    .data(root.leaves())
-    .join("g")
-    .attr("class", "node");
+        const node = svg.selectAll(".node")
+          .data(root.leaves())
+          .join("g")
+          .attr("class", "node");
 
-node.append("circle")
-    .attr("cx", d => d.x)
-    .attr("cy", d => d.y)
-    .attr("r", d => d.r)
-    .attr("fill", d => color(d.data.category));
+        node.append("circle")
+          .attr("cx", d => d.x)
+          .attr("cy", d => d.y)
+          .attr("r", d => d.r)
+          .attr("fill", d => color(d.data.category));
 
-node.append("text")
-    .attr("x", d => d.x)
-    .attr("y", d => d.y + 4)
-    .style("text-anchor", "middle")
-    .style("font-size", "10px")
-    .text(d => `${d.data.count}`);
+        node.append("text")
+          .attr("x", d => d.x)
+          .attr("y", d => d.y + 4)
+          .style("text-anchor", "middle")
+          .style("font-size", "10px")
+          .text(d => `${d.data.count}`);
 
-node
-    .on("mouseover", function (event, d) {
-        d3.select(this).select("circle")
-            .transition()
-            .duration(100)
-            .attr("r", d => d.r + 10);
+        node
+          .on("mouseover", function (event, d) {
+            d3.select(this).select("circle")
+              .transition()
+              .duration(100)
+              .attr("r", d => d.r + 10);
 
-        d3.select(this).select("text")
-            .text(d => `${d.data.category}`);
-    })
-    .on("mouseout", function (event, d) {
-        d3.select(this).select("circle")
-            .transition()
-            .duration(100)
-            .attr("r", d => d.r);
+            d3.select(this).select("text")
+              .text(d => `${d.data.category}`);
+          })
+          .on("mouseout", function (event, d) {
+            d3.select(this).select("circle")
+              .transition()
+              .duration(100)
+              .attr("r", d => d.r);
 
-        d3.select(this).select("text")
-            .text(d => `${d.data.count}`);
-    });
+            d3.select(this).select("text")
+              .text(d => `${d.data.count}`);
+          });
 
 
         // Add tooltip element within the chart
@@ -331,9 +331,9 @@ node
         svg.append("text")
           .attr("x", width / 2)
           .attr("y", 30)
-          .style("font-size", "18px") 
+          .style("font-size", "18px")
           .style("text-anchor", "middle")
-          .text("Content Type of Netflix");
+          .text("Content Categories of Netflix");
 
         svg.append("text")
           .attr("x", width / 2 - 150)
@@ -581,9 +581,9 @@ node
             .attr("height", yScaleNew.bandwidth())
             .attr("fill", d => {
               if (d.category === 'TV Show') {
-                return "#0843e2"; // color for TV Show
+                return "#0081A7"; // color for TV Show
               } if (d.category === 'Movie') {
-                return "#007b5e"; // color for Movie
+                return "#00AFB9"; // color for Movie
               }
             })
             .on("mouseover", (event, d) => {
@@ -597,7 +597,7 @@ node
             })
             .on("mouseout", (event, d) => {
               // On mouse out, return to the original color based on category
-              d3.select(event.currentTarget).attr("fill", d.category === 'TV Show' ? "#0843e2" : "#007b5e");
+              d3.select(event.currentTarget).attr("fill", d.category === 'TV Show' ? "#0081A7" : "#00AFB9");
               tooltip4.style("opacity", 0);
             })
             .on("click", (event, d) => {
@@ -648,6 +648,13 @@ node
           .attr("class", "tooltip")
           .style("opacity", 0);
 
+        const initialGradientColors = data4.map((d, i) => {
+          const colorScale = d3.scaleLinear()
+            .domain([0, data4.length - 1])
+            .range(["#0081A7", "#00AFB9", "#00AFB9", "#FED9B7", "#F07167"]);
+          return colorScale(i);
+        });
+
         const bars4 = svg4.selectAll("rect")
           .data(data4)
           .enter()
@@ -656,16 +663,23 @@ node
           .attr("y", d => yScale4(d.country))
           .attr("width", d => xScale4(d.content))
           .attr("height", yScale4.bandwidth())
-          .attr("fill", "#6ad49b")
-          .on("mouseover", (event, d) => {
-            d3.select(event.currentTarget).attr("fill", "#ff7f0e");
+          .attr("fill", (d, i) => initialGradientColors[i]) // Use the initial gradient colors
+          .each(function (d, i) {
+            // Store the original fill color for each bar as a property
+            d3.select(this).attr("data-original-fill", initialGradientColors[i]);
+          })
+          .on("mouseover", function (event, d) {
+            d3.select(this).attr("fill", "#FF7F0E"); // Change the fill color to orange on mouseover
             tooltip4.style("opacity", 1)
               .html(`Country: ${d.country}<br>Content: ${d.content}`)
               .style("left", (event.pageX + 10) + "px")
               .style("top", (event.pageY + 10) + "px");
           })
-          .on("mouseout", (event, d) => {
-            d3.select(event.currentTarget).attr("fill", "#6ad49b");
+          .on("mouseout", function () {
+            // Revert back to the initially assigned gradient color on mouseout
+            d3.select(this).attr("fill", function () {
+              return d3.select(this).attr("data-original-fill");
+            });
             tooltip4.style("opacity", 0);
           })
           .on("click", (event, d) => {
@@ -678,6 +692,8 @@ node
               updateChart3(newData, d.country);
             }
           });
+
+
 
         svg4.append("g")
           .attr("transform", `translate(0,${height4})`)

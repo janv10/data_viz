@@ -113,11 +113,11 @@
     }
 
     .legend-container label[for="tvShowCheckbox"] {
-      background-color: #a678de;
+      background-color: #0081A7;
     }
 
     .legend-container label[for="movieCheckbox"] {
-      background-color: #6ad49b;
+      background-color: #81b29a;
     }
 
     .legend-container .checkbox-text {
@@ -239,7 +239,7 @@
           { 'category': 'Classic Movies', 'count': 65 },
           { 'category': 'TV Sci-Fi & Fantasy', 'count': 66 },
           { 'category': 'Sci-Fi & Fantasy', 'count': 165 },
-          { 'category': 'Anime Features', 'count': 41 },
+          { 'category': 'Anime Movies', 'count': 41 },
           { 'category': 'Sports Movies', 'count': 149 },
           { 'category': 'TV Action & Adventure', 'count': 122 },
           { 'category': 'Cult Movies', 'count': 42 },
@@ -336,11 +336,11 @@
           .text("Content Categories of Netflix");
 
         svg.append("text")
-          .attr("x", width / 2 - 150)
+          .attr("x", width / 2 - 130)
           .attr("y", 50)
           .style("fill", "red")
           .style("font-size", "14px")
-          .text("Hover over the bubbles to view more information");
+          .text("Hover over the bubbles for more information");
 
         break;
 
@@ -383,7 +383,7 @@
 
         const colorScale2 = d3.scaleOrdinal()
           .domain(["TV Show", "Movie"])
-          .range(["#a678de", "#6ad49b"]);
+          .range(["#0081A7", "#81b29a"]);
 
         const svg2 = d3.select("#chart2")
           .append("svg")
@@ -414,14 +414,14 @@
         const pathTVShow = svg2.append("path")
           .datum(dataTVShow)
           .attr("fill", "none")
-          .attr("stroke", "#a678de")
+          .attr("stroke", "#0081A7")
           .attr("stroke-width", 2)
           .attr("d", lineTVShow);
 
         const pathMovie = svg2.append("path")
           .datum(dataMovie)
           .attr("fill", "none")
-          .attr("stroke", "#6ad49b")
+          .attr("stroke", "#81b29a")
           .attr("stroke-width", 2)
           .attr("d", lineMovie);
 

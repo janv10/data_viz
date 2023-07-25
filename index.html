@@ -346,27 +346,30 @@
 
       case 2:
         const data2 = [
-          { year: 2008, type: "TV Show", count: 1 },
-          { year: 2008, type: "Movie", count: 1 },
-          { year: 2009, type: "Movie", count: 2 },
-          { year: 2010, type: "Movie", count: 1 },
-          { year: 2011, type: "TV Show", count: 25 },
-          { year: 2011, type: "Movie", count: 13 },
-          { year: 2012, type: "TV Show", count: 3 },
-          { year: 2012, type: "Movie", count: 4 },
-          { year: 2013, type: "TV Show", count: 3 },
-          { year: 2013, type: "Movie", count: 6 },
-          { year: 2014, type: "Movie", count: 19 },
-          { year: 2015, type: "TV Show", count: 6 },
-          { year: 2015, type: "Movie", count: 58 },
-          { year: 2016, type: "TV Show", count: 148 },
-          { year: 2016, type: "Movie", count: 264 },
-          { year: 2017, type: "TV Show", count: 271 },
-          { year: 2017, type: "Movie", count: 913 },
-          { year: 2018, type: "TV Show", count: 339 },
-          { year: 2018, type: "Movie", count: 1290 },
-          { year: 2019, type: "TV Show", count: 476 },
-          { year: 2019, type: "Movie", count: 1367 },
+          { 'year': 2008, 'type': 'TV Show', 'count': 1 },
+          { 'year': 2008, 'type': 'Movie', 'count': 1 },
+          { 'year': 2009, 'type': 'TV Show', 'count': 0 },
+          { 'year': 2009, 'type': 'Movie', 'count': 2 },
+          { 'year': 2010, 'type': 'TV Show', 'count': 0 },
+          { 'year': 2010, 'type': 'Movie', 'count': 1 },
+          { 'year': 2011, 'type': 'TV Show', 'count': 0 },
+          { 'year': 2011, 'type': 'Movie', 'count': 13 },
+          { 'year': 2012, 'type': 'TV Show', 'count': 0 },
+          { 'year': 2012, 'type': 'Movie', 'count': 3 },
+          { 'year': 2013, 'type': 'TV Show', 'count': 5 },
+          { 'year': 2013, 'type': 'Movie', 'count': 6 },
+          { 'year': 2014, 'type': 'TV Show', 'count': 5 },
+          { 'year': 2014, 'type': 'Movie', 'count': 19 },
+          { 'year': 2015, 'type': 'TV Show', 'count': 26 },
+          { 'year': 2015, 'type': 'Movie', 'count': 56 },
+          { 'year': 2016, 'type': 'TV Show', 'count': 176 },
+          { 'year': 2016, 'type': 'Movie', 'count': 253 },
+          { 'year': 2017, 'type': 'TV Show', 'count': 349 },
+          { 'year': 2017, 'type': 'Movie', 'count': 839 },
+          { 'year': 2018, 'type': 'TV Show', 'count': 412 },
+          { 'year': 2018, 'type': 'Movie', 'count': 1237 },
+          { 'year': 2019, 'type': 'TV Show', 'count': 592 },
+          { 'year': 2019, 'type': 'Movie', 'count': 1424 }
         ];
 
         const margin = { top: 90, right: 80, bottom: 50, left: 80 };
@@ -519,6 +522,39 @@
         // Initial setup: Show both TV Show and Movie data
         document.getElementById("tvShowCheckbox").checked = true;
         document.getElementById("movieCheckbox").checked = true;
+
+        const year2008TVShow = data2.find((d) => d.year === 2008 && d.type === "TV Show");
+
+// Append a red arrow to the SVG using a marker element
+const marker = svg2.append("marker")
+  .attr("id", "red-arrow")
+  .attr("markerWidth", 13)
+  .attr("markerHeight", 13)
+  .attr("refX", 10) // Adjust the refX value to make the arrow face the other way around
+  .attr("refY", 6)
+  .attr("orient", "auto");
+
+marker.append("path")
+  .attr("d", "M2,2 L2,11 L10,6 L2,2")
+  .attr("fill", "red");
+
+// Append the arrow to point to the circle for the year 2008
+svg2.append("line")
+  .attr("x1", xScale2(year2008TVShow.year) + 80) // Adjust the x-coordinate for positioning the line start
+  .attr("y1", yScale2(year2008TVShow.count) - 100) // Adjust the y-coordinate for positioning the line start
+  .attr("x2", xScale2(year2008TVShow.year)) // Adjust the x-coordinate for positioning the line end
+  .attr("y2", yScale2(year2008TVShow.count)) // Adjust the y-coordinate for positioning the line end
+  .attr("stroke", "red")
+  .attr("stroke-width", 2)
+  .attr("marker-end", "url(#red-arrow)");
+
+// Add text at the end of the arrow
+svg2.append("text")
+  .attr("x", xScale2(year2008TVShow.year) + 85) // Adjust the x-coordinate for positioning the text
+  .attr("y", yScale2(year2008TVShow.count) - 100) // Adjust the y-coordinate for positioning the text
+  .text("Netflix launched online streaming")
+  .attr("font-size", "14px")
+  .attr("fill", "red");
 
         // Update the chart initially to show both TV Show and Movie data
         updateChart();

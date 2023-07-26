@@ -150,7 +150,7 @@
 </head>
 
 <h1 class="display-4"> Let's explore Netflix!</h1>
-<p class="display-2"> Click on the buttons below to begin exploration!</p>
+<p class="display-2"> Click on the buttons below to begin exploration.</p>
 <div class="button-container">
   <button class="button" onclick="showChart(1)">1</button>
   <button class="button" onclick="showChart(2)">2</button>
@@ -680,7 +680,7 @@
 
           // Add the legend for TV Show
           const legendTvShow = svg4.append("g").attr("class", "legend")
-            .attr("transform", `translate(${width4 - 120}, 10)`);
+            .attr("transform", `translate(${width4 - 60}, -50)`);
 
           legendTvShow.append("rect")
             .attr("x", 0)
@@ -697,7 +697,7 @@
 
           // Add the legend for Movie
           const legendMovie = svg4.append("g").attr("class", "legend")
-            .attr("transform", `translate(${width4 - 120}, 30)`);
+            .attr("transform", `translate(${width4 - 60}, -30)`);
 
           legendMovie.append("rect")
             .attr("x", 0)

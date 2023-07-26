@@ -14,7 +14,7 @@
 
     .chart {
       width: 850px;
-      height: 595px;
+      height: 600px;
       background-color: #f7f7f7;
       border: 1px solid #ccc;
       border: 1px solid #f7f7f7;
@@ -66,8 +66,9 @@
 
     svg {
       width: 900px;
-      height: 600px;
+      height: 590px;
     }
+
 
     .content-container {
       display: flex;
@@ -125,6 +126,18 @@
       font-size: 14px;
       margin-bottom: 10px;
     }
+
+    .legend rect {
+    stroke-width: 2;
+  }
+
+  .legend text {
+    font-size: 12px;
+    font-family: sans-serif;
+    fill: #333;
+    text-anchor: start;
+    margin-left: 5px;
+  }
   </style>
 
 
@@ -257,7 +270,7 @@
         ];
 
         const width = 900;
-        const height = 620;
+        const height = 617;
         const svg = d3.select("#chart1")
           .append("svg")
           .attr("width", width)
@@ -525,36 +538,36 @@
 
         const year2008TVShow = data2.find((d) => d.year === 2008 && d.type === "TV Show");
 
-// Append a red arrow to the SVG using a marker element
-const marker = svg2.append("marker")
-  .attr("id", "red-arrow")
-  .attr("markerWidth", 13)
-  .attr("markerHeight", 13)
-  .attr("refX", 10) // Adjust the refX value to make the arrow face the other way around
-  .attr("refY", 6)
-  .attr("orient", "auto");
+        // Append a red arrow to the SVG using a marker element
+        const marker = svg2.append("marker")
+          .attr("id", "red-arrow")
+          .attr("markerWidth", 13)
+          .attr("markerHeight", 13)
+          .attr("refX", 10) // Adjust the refX value to make the arrow face the other way around
+          .attr("refY", 6)
+          .attr("orient", "auto");
 
-marker.append("path")
-  .attr("d", "M2,2 L2,11 L10,6 L2,2")
-  .attr("fill", "red");
+        marker.append("path")
+          .attr("d", "M2,2 L2,11 L10,6 L2,2")
+          .attr("fill", "red");
 
-// Append the arrow to point to the circle for the year 2008
-svg2.append("line")
-  .attr("x1", xScale2(year2008TVShow.year) + 80) // Adjust the x-coordinate for positioning the line start
-  .attr("y1", yScale2(year2008TVShow.count) - 100) // Adjust the y-coordinate for positioning the line start
-  .attr("x2", xScale2(year2008TVShow.year)) // Adjust the x-coordinate for positioning the line end
-  .attr("y2", yScale2(year2008TVShow.count)) // Adjust the y-coordinate for positioning the line end
-  .attr("stroke", "red")
-  .attr("stroke-width", 2)
-  .attr("marker-end", "url(#red-arrow)");
+        // Append the arrow to point to the circle for the year 2008
+        svg2.append("line")
+          .attr("x1", xScale2(year2008TVShow.year) + 80) // Adjust the x-coordinate for positioning the line start
+          .attr("y1", yScale2(year2008TVShow.count) - 100) // Adjust the y-coordinate for positioning the line start
+          .attr("x2", xScale2(year2008TVShow.year)) // Adjust the x-coordinate for positioning the line end
+          .attr("y2", yScale2(year2008TVShow.count)) // Adjust the y-coordinate for positioning the line end
+          .attr("stroke", "red")
+          .attr("stroke-width", 2)
+          .attr("marker-end", "url(#red-arrow)");
 
-// Add text at the end of the arrow
-svg2.append("text")
-  .attr("x", xScale2(year2008TVShow.year) + 85) // Adjust the x-coordinate for positioning the text
-  .attr("y", yScale2(year2008TVShow.count) - 100) // Adjust the y-coordinate for positioning the text
-  .text("Netflix launched online streaming")
-  .attr("font-size", "14px")
-  .attr("fill", "red");
+        // Add text at the end of the arrow
+        svg2.append("text")
+          .attr("x", xScale2(year2008TVShow.year) + 85) // Adjust the x-coordinate for positioning the text
+          .attr("y", yScale2(year2008TVShow.count) - 100) // Adjust the y-coordinate for positioning the text
+          .text("Netflix launched online streaming")
+          .attr("font-size", "14px")
+          .attr("fill", "red");
 
         // Update the chart initially to show both TV Show and Movie data
         updateChart();
@@ -578,13 +591,13 @@ svg2.append("text")
 
         const margin4 = { top: 80, right: 40, bottom: 50, left: 130 };
         const width4 = 800 - margin4.left - margin4.right;
-        const height4 = 550 - margin4.top - margin4.bottom;
+        const height4 = 500 - margin4.top - margin4.bottom;
 
         const svg4 = chart.append("svg")
-          .attr("width", width4 + margin4.left + margin4.right)
-          .attr("height", height4 + margin4.top + margin4.bottom)
-          .append("g")
-          .attr("transform", `translate(${margin4.left},${margin4.top})`);
+  .attr("width", 500) // Set an appropriate width for the main chart (smaller than 590px)
+  .attr("height", height4 + margin4.top + margin4.bottom)
+  .append("g")
+  .attr("transform", `translate(${margin4.left},${margin4.top})`);
 
         const xScale4 = d3.scaleLinear()
           .domain([0, d3.max(data4, d => d.content)])
@@ -594,6 +607,55 @@ svg2.append("text")
           .domain(data4.map(d => d.country))
           .range([0, height4])
           .padding(0.1);
+
+ // Create an SVG element for the legend
+const legendSvg = chart.append("svg")
+  .attr("width", 100) // Set an appropriate width for the legend
+  .attr("height", height4 + margin4.top + margin4.bottom) // Height same as the main chart
+  .append("g")
+  .attr("transform", `translate(${width4 + 170}, ${0})`); // Position the legend on the right-top
+
+// Function to toggle the legend visibility based on the data being displayed
+function toggleLegendVisibility(showLegend) {
+  if (showLegend) {
+    legendSvg.style("display", "block");
+  } else {
+    legendSvg.style("display", "none");
+  }
+}
+
+// Add the legend elements (TV Show and Movie) with colors
+const legendData = [
+  { category: "TV Show", color: "#0081A7" },
+  { category: "Movie", color: "#00AFB9" },
+];
+
+const legendRectSize = 20; // Size of the legend rectangle
+const legendSpacing = 10; // Spacing between legend items
+
+// Create legend items
+const legend = legendSvg.selectAll(".legend")
+  .data(legendData)
+  .enter()
+  .append("g")
+  .attr("class", "legend")
+  .attr("transform", (d, i) => `translate(0, ${i * (legendRectSize + legendSpacing)})`); // Position the legend items vertically
+
+// Add rectangles for each legend item
+legend.append("rect")
+  .attr("width", legendRectSize)
+  .attr("height", legendRectSize)
+  .attr("fill", d => d.color);
+
+// Add text labels for each legend item
+legend.append("text")
+  .attr("x", legendRectSize + legendSpacing)
+  .attr("y", legendRectSize / 2)
+  .attr("dy", "0.32em")
+  .text(d => d.category);
+
+// Initially hide the legend
+toggleLegendVisibility(false);
 
         function updateChart3(newData, countryName) {
           svg4.selectAll("*").remove();
@@ -606,6 +668,11 @@ svg2.append("text")
             .domain(newData.map(d => d.category))
             .range([0, height4])
             .padding(0.1);
+
+          svg4.append("g").attr("transform", `translate(0,${height4})`).call(d3.axisBottom(xScaleNew));
+          svg4.append("g").call(d3.axisLeft(yScaleNew));
+
+          toggleLegendVisibility(newData.some(d => d.category === 'TV Show' || d.category === 'Movie'));
 
           svg4.selectAll("rect")
             .data(newData)
@@ -661,7 +728,7 @@ svg2.append("text")
             .attr("y", -margin4.left + 30)
             .style("text-anchor", "middle")
             .style("font-size", "14px")
-            .text("Categories");
+            .text("Content Type");
 
           svg4.append("text")
             .attr("x", width4 / 2)
@@ -670,13 +737,20 @@ svg2.append("text")
             .style("font-size", "14px")
             .text("Number of TV Shows and Movies in " + countryName);
 
-
           svg4.append("text")
             .attr("x", width4 / 2)
             .attr("y", -margin4.top / 2)
             .style("text-anchor", "middle")
             .style("font-size", "18px")
             .text("Total Number of Content in " + countryName); // Use the country name in the title
+
+          svg4.append("text")
+            .attr("x", width4 / 2)
+            .attr("y", -margin4.top / 2 + 20)
+            .style("text-anchor", "middle")
+            .style("font-size", "12px")
+            .style("fill", "red")
+            .text("Click on a Bar to Return Back to the Country Content Data"); // Use the country name in the title
         }
 
         const tooltip4 = d3.select("body")
@@ -726,9 +800,9 @@ svg2.append("text")
                 { category: "Movie", content: d.movie }
               ];
               updateChart3(newData, d.country);
+     
             }
           });
-
 
 
         svg4.append("g")
@@ -744,6 +818,14 @@ svg2.append("text")
           .style("text-anchor", "middle")
           .style("font-size", "18px")
           .text("Top 10 Countries with the Most Content");
+
+        svg4.append("text")
+          .attr("x", width4 / 2)
+          .attr("y", -margin4.top / 2 + 20)
+          .style("text-anchor", "middle")
+          .style("font-size", "12px")
+          .style("fill", "red")
+          .text("Click on any Bar to Drill Down Further");
 
         svg4.append("text")
           .attr("x", width4 / 2)

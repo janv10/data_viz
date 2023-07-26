@@ -64,14 +64,17 @@
       pointer-events: none;
     }
 
-    
-
-
     .content-container {
       display: flex;
     }
 
     .example-paragraph {
+      display: none;
+      flex: 1;
+      color: black;
+    }
+
+    .example-paragraph3 {
       display: none;
       flex: 1;
       color: black;
@@ -83,6 +86,12 @@
 
     .display-4 {
       color: black;
+    }
+
+    .display-2 {
+      color: red;
+      font-size: 12px;
+
     }
 
     .legend-container {
@@ -125,22 +134,23 @@
     }
 
     .legend rect {
-    stroke-width: 2;
-  }
+      stroke-width: 2;
+    }
 
-  .legend text {
-    font-size: 12px;
-    font-family: sans-serif;
-    fill: #333;
-    text-anchor: start;
-    margin-left: 5px;
-  }
+    .legend text {
+      font-size: 12px;
+      font-family: sans-serif;
+      fill: #333;
+      text-anchor: start;
+      margin-left: 5px;
+    }
   </style>
 
 
 </head>
 
 <h1 class="display-4"> Let's explore Netflix!</h1>
+<p class="display-2"> Click on the buttons below to begin exploration!</p>
 <div class="button-container">
   <button class="button" onclick="showChart(1)">1</button>
   <button class="button" onclick="showChart(2)">2</button>
@@ -150,9 +160,10 @@
   <div class="chart" id="chart1"></div>
   <div class="chart" id="chart2"></div>
   <div class="chart" id="chart3"></div>
-  <p class="example-paragraph" id="examplePara">Example Paragraph for Chart 1</p>
+  <p class="example-paragraph" id="examplePara"></p>
+
   <p class="example-paragraph" id="examplePara2"> </p>
-  <p class="example-paragraph" id="examplePara3">Example Paragraph for Chart 3</p>
+  <p class="example-paragraph3" id="examplePara3"></p>
 
   <div class="legend-container">
     <p class="checkbox-text">Use the checkboxes below to filter the trend lines </p>
@@ -187,8 +198,6 @@
     // Generate the chart content based on the selected chart number
     generateChartContent(selectedChart, chartNumber);
   }
-
-
 
   // Generate the content for each chart based on the chart number
   function generateChartContent(chart, chartNumber) {
@@ -331,7 +340,6 @@
             d3.select(this).select("text")
               .text(d => `${d.data.count}`);
           });
-
 
         // Add tooltip element within the chart
         const tooltip = svg.append("text")
@@ -570,6 +578,8 @@
         updateChart();
 
         break;
+
+
       case 3:
         const data4 = [
           { country: "United States", content: 1907, tvshow: 532, movie: 1375 },
@@ -588,13 +598,13 @@
 
         const margin4 = { top: 80, right: 40, bottom: 50, left: 130 };
         const width4 = 800 - margin4.left - margin4.right;
-        const height4 = 500 - margin4.top - margin4.bottom;
+        const height4 = 550 - margin4.top - margin4.bottom;
 
         const svg4 = chart.append("svg")
-  .attr("width", 900) // Set an appropriate width for the main chart (smaller than 590px)
-  .attr("height", height4 + margin4.top + margin4.bottom)
-  .append("g")
-  .attr("transform", `translate(${margin4.left},${margin4.top})`);
+          .attr("width", 900)
+          .attr("height", height4 + margin4.top + margin4.bottom + 30)
+          .append("g")
+          .attr("transform", `translate(${margin4.left},${margin4.top})`);
 
         const xScale4 = d3.scaleLinear()
           .domain([0, d3.max(data4, d => d.content)])
@@ -605,54 +615,9 @@
           .range([0, height4])
           .padding(0.1);
 
- // Create an SVG element for the legend
-const legendSvg = chart.append("svg")
-  .attr("width", 100) // Set an appropriate width for the legend
-  .attr("height", height4 + margin4.top + margin4.bottom) // Height same as the main chart
-  .append("g")
-  .attr("transform", `translate(${width4 + 70}, ${-40})`); // Position the legend on the right-top
-
-// Function to toggle the legend visibility based on the data being displayed
-function toggleLegendVisibility(showLegend) {
-  if (showLegend) {
-    legendSvg.style("display", "block");
-  } else {
-    legendSvg.style("display", "none");
-  }
-}
-
-// Add the legend elements (TV Show and Movie) with colors
-const legendData = [
-  { category: "TV Show", color: "#0081A7" },
-  { category: "Movie", color: "#00AFB9" },
-];
-
-const legendRectSize = 20; // Size of the legend rectangle
-const legendSpacing = 10; // Spacing between legend items
-
-// Create legend items
-const legend = legendSvg.selectAll(".legend")
-  .data(legendData)
-  .enter()
-  .append("g")
-  .attr("class", "legend")
-  .attr("transform", (d, i) => `translate(0, ${i * (legendRectSize + legendSpacing)})`); // Position the legend items vertically
-
-// Add rectangles for each legend item
-legend.append("rect")
-  .attr("width", legendRectSize)
-  .attr("height", legendRectSize)
-  .attr("fill", d => d.color);
-
-// Add text labels for each legend item
-legend.append("text")
-  .attr("x", legendRectSize + legendSpacing)
-  .attr("y", legendRectSize / 2)
-  .attr("dy", "0.32em")
-  .text(d => d.category);
-
-// Initially hide the legend
-toggleLegendVisibility(false);
+        // Define the colors for TV show and movie bars
+        const tvShowColor = "#0081A7";
+        const movieColor = "#00AFB9";
 
         function updateChart3(newData, countryName) {
           svg4.selectAll("*").remove();
@@ -669,7 +634,8 @@ toggleLegendVisibility(false);
           svg4.append("g").attr("transform", `translate(0,${height4})`).call(d3.axisBottom(xScaleNew));
           svg4.append("g").call(d3.axisLeft(yScaleNew));
 
-          toggleLegendVisibility(newData.some(d => d.category === 'TV Show' || d.category === 'Movie'));
+          // Remove the existing legend
+          svg4.selectAll(".legend").remove(); // Remove the existing legend
 
           svg4.selectAll("rect")
             .data(newData)
@@ -712,6 +678,40 @@ toggleLegendVisibility(false);
               }
             });
 
+          // Add the legend for TV Show
+          const legendTvShow = svg4.append("g").attr("class", "legend")
+            .attr("transform", `translate(${width4 - 120}, 10)`);
+
+          legendTvShow.append("rect")
+            .attr("x", 0)
+            .attr("width", 12)
+            .attr("height", 12)
+            .attr("fill", tvShowColor);
+
+          legendTvShow.append("text")
+            .attr("x", 20)
+            .attr("y", 6)
+            .attr("dy", "0.35em")
+            .style("font-size", "12px")
+            .text("TV Show");
+
+          // Add the legend for Movie
+          const legendMovie = svg4.append("g").attr("class", "legend")
+            .attr("transform", `translate(${width4 - 120}, 30)`);
+
+          legendMovie.append("rect")
+            .attr("x", 0)
+            .attr("width", 12)
+            .attr("height", 12)
+            .attr("fill", movieColor);
+
+          legendMovie.append("text")
+            .attr("x", 20)
+            .attr("y", 6)
+            .attr("dy", "0.35em")
+            .style("font-size", "12px")
+            .text("Movie");
+
           svg4.append("g")
             .attr("transform", `translate(0,${height4})`)
             .call(d3.axisBottom(xScaleNew));
@@ -747,7 +747,7 @@ toggleLegendVisibility(false);
             .style("text-anchor", "middle")
             .style("font-size", "12px")
             .style("fill", "red")
-            .text("Click on a Bar to Return Back to the Country Content Data"); // Use the country name in the title
+            .text("Click on a Bar to Return to the Country Content Data"); // Use the country name in the title
         }
 
         const tooltip4 = d3.select("body")
@@ -797,10 +797,8 @@ toggleLegendVisibility(false);
                 { category: "Movie", content: d.movie }
               ];
               updateChart3(newData, d.country);
-     
             }
           });
-
 
         svg4.append("g")
           .attr("transform", `translate(0,${height4})`)

@@ -64,10 +64,7 @@
       pointer-events: none;
     }
 
-    svg {
-      width: 900px;
-      height: 590px;
-    }
+    
 
 
     .content-container {
@@ -594,7 +591,7 @@
         const height4 = 500 - margin4.top - margin4.bottom;
 
         const svg4 = chart.append("svg")
-  .attr("width", 500) // Set an appropriate width for the main chart (smaller than 590px)
+  .attr("width", 900) // Set an appropriate width for the main chart (smaller than 590px)
   .attr("height", height4 + margin4.top + margin4.bottom)
   .append("g")
   .attr("transform", `translate(${margin4.left},${margin4.top})`);
@@ -613,7 +610,7 @@ const legendSvg = chart.append("svg")
   .attr("width", 100) // Set an appropriate width for the legend
   .attr("height", height4 + margin4.top + margin4.bottom) // Height same as the main chart
   .append("g")
-  .attr("transform", `translate(${width4 + 170}, ${0})`); // Position the legend on the right-top
+  .attr("transform", `translate(${width4 + 70}, ${-40})`); // Position the legend on the right-top
 
 // Function to toggle the legend visibility based on the data being displayed
 function toggleLegendVisibility(showLegend) {

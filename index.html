@@ -184,27 +184,21 @@
 
   // Show the specified chart based on the button click
   function showChart(chartNumber) {
-    // Hide all charts and legend container
     d3.selectAll('.chart').style('display', 'none');
     d3.select('.legend-container').style('display', 'none');
 
-    // Show the selected chart and legend container
     const selectedChart = d3.select(`#chart${chartNumber}`);
     selectedChart.style('display', 'block');
     if (chartNumber === 2) {
       d3.select('.legend-container').style('display', 'block');
     }
 
-    // Generate the chart content based on the selected chart number
     generateChartContent(selectedChart, chartNumber);
   }
 
-  // Generate the content for each chart based on the chart number
   function generateChartContent(chart, chartNumber) {
-    // Clear existing content
     chart.html('');
 
-    // Show/hide annotation based on the selected chart number
     const examplePara = document.getElementById('examplePara');
     if (chartNumber === 1) {
       examplePara.classList.add('show-paragraph');
@@ -226,7 +220,6 @@
       examplePara3.classList.remove('show-paragraph');
     }
 
-    // Generate content based on the chart number
     switch (chartNumber) {
       case 1:
 
@@ -341,7 +334,6 @@
               .text(d => `${d.data.count}`);
           });
 
-        // Add tooltip element within the chart
         const tooltip = svg.append("text")
           .attr("class", "tooltip")
           .style("opacity", 0);
@@ -478,7 +470,6 @@
         svg2.append("g")
           .call(yAxis2);
 
-        // Add axis labels
         svg2.append("text")
           .attr("x", width2 / 2)
           .attr("y", height2 + margin.bottom - 10)
@@ -492,7 +483,6 @@
           .style("text-anchor", "middle")
           .text("Number of Movies/TV Shows Added");
 
-        // Add title
         svg2.append("text")
           .attr("x", width2 / 2)
           .attr("y", -margin.top / 2)
@@ -500,7 +490,6 @@
           .style("font-size", "18px")
           .text("Number of TV Shows and Movies Added Over the Years");
 
-        // Add subtitle
         svg2.append("text")
           .attr("x", width2 / 2)
           .attr("y", -20)
@@ -509,12 +498,10 @@
           .style("fill", "red")
           .text("Hover over each circle to view more information");
 
-        // JavaScript code for checkboxes and chart update
         let showTVShows = true;
         let showMovies = true;
 
         function updateChart() {
-          // Hide/show the lines and circles based on the legend
           pathTVShow.attr("display", showTVShows ? "inline" : "none");
           pathMovie.attr("display", showMovies ? "inline" : "none");
 
@@ -526,7 +513,6 @@
           });
         }
 
-        // Add event listeners to the checkboxes
         document.getElementById("tvShowCheckbox").addEventListener("change", function () {
           showTVShows = this.checked;
           updateChart();
@@ -537,7 +523,6 @@
           updateChart();
         });
 
-        // Initial setup: Show both TV Show and Movie data
         document.getElementById("tvShowCheckbox").checked = true;
         document.getElementById("movieCheckbox").checked = true;
 
@@ -548,7 +533,7 @@
           .attr("id", "red-arrow")
           .attr("markerWidth", 13)
           .attr("markerHeight", 13)
-          .attr("refX", 10) // Adjust the refX value to make the arrow face the other way around
+          .attr("refX", 10) 
           .attr("refY", 6)
           .attr("orient", "auto");
 
@@ -558,23 +543,22 @@
 
         // Append the arrow to point to the circle for the year 2008
         svg2.append("line")
-          .attr("x1", xScale2(year2008TVShow.year) + 80) // Adjust the x-coordinate for positioning the line start
-          .attr("y1", yScale2(year2008TVShow.count) - 100) // Adjust the y-coordinate for positioning the line start
-          .attr("x2", xScale2(year2008TVShow.year)) // Adjust the x-coordinate for positioning the line end
-          .attr("y2", yScale2(year2008TVShow.count)) // Adjust the y-coordinate for positioning the line end
+          .attr("x1", xScale2(year2008TVShow.year) + 80) 
+          .attr("y1", yScale2(year2008TVShow.count) - 100) 
+          .attr("x2", xScale2(year2008TVShow.year)) 
+          .attr("y2", yScale2(year2008TVShow.count)) 
           .attr("stroke", "red")
           .attr("stroke-width", 2)
           .attr("marker-end", "url(#red-arrow)");
 
         // Add text at the end of the arrow
         svg2.append("text")
-          .attr("x", xScale2(year2008TVShow.year) + 85) // Adjust the x-coordinate for positioning the text
-          .attr("y", yScale2(year2008TVShow.count) - 100) // Adjust the y-coordinate for positioning the text
+          .attr("x", xScale2(year2008TVShow.year) + 85) 
+          .attr("y", yScale2(year2008TVShow.count) - 100) 
           .text("Netflix launched online streaming")
           .attr("font-size", "14px")
           .attr("fill", "red");
 
-        // Update the chart initially to show both TV Show and Movie data
         updateChart();
 
         break;
@@ -634,7 +618,6 @@
           svg4.append("g").attr("transform", `translate(0,${height4})`).call(d3.axisBottom(xScaleNew));
           svg4.append("g").call(d3.axisLeft(yScaleNew));
 
-          // Remove the existing legend
           svg4.selectAll(".legend").remove(); // Remove the existing legend
 
           svg4.selectAll("rect")
@@ -678,7 +661,6 @@
               }
             });
 
-          // Add the legend for TV Show
           const legendTvShow = svg4.append("g").attr("class", "legend")
             .attr("transform", `translate(${width4 - 60}, -50)`);
 
@@ -695,7 +677,6 @@
             .style("font-size", "12px")
             .text("TV Show");
 
-          // Add the legend for Movie
           const legendMovie = svg4.append("g").attr("class", "legend")
             .attr("transform", `translate(${width4 - 60}, -30)`);
 
@@ -739,7 +720,7 @@
             .attr("y", -margin4.top / 2)
             .style("text-anchor", "middle")
             .style("font-size", "18px")
-            .text("Total Number of Content in " + countryName); // Use the country name in the title
+            .text("Total Number of Content in " + countryName); 
 
           svg4.append("text")
             .attr("x", width4 / 2)
@@ -747,7 +728,7 @@
             .style("text-anchor", "middle")
             .style("font-size", "12px")
             .style("fill", "red")
-            .text("Click on a Bar to Return to the Country Content Data"); // Use the country name in the title
+            .text("Click on a Bar to Return to the Country Content Data"); 
         }
 
         const tooltip4 = d3.select("body")
@@ -772,7 +753,6 @@
           .attr("height", yScale4.bandwidth())
           .attr("fill", (d, i) => initialGradientColors[i]) // Use the initial gradient colors
           .each(function (d, i) {
-            // Store the original fill color for each bar as a property
             d3.select(this).attr("data-original-fill", initialGradientColors[i]);
           })
           .on("mouseover", function (event, d) {
@@ -783,14 +763,13 @@
               .style("top", (event.pageY + 10) + "px");
           })
           .on("mouseout", function () {
-            // Revert back to the initially assigned gradient color on mouseout
             d3.select(this).attr("fill", function () {
               return d3.select(this).attr("data-original-fill");
             });
             tooltip4.style("opacity", 0);
           })
           .on("click", (event, d) => {
-            tooltip4.style("opacity", 0); // Hide tooltip when a bar is clicked
+            tooltip4.style("opacity", 0); 
             if (d.tvshow !== undefined && d.movie !== undefined) {
               const newData = [
                 { category: "TV Show", content: d.tvshow },

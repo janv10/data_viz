@@ -457,7 +457,7 @@
           .on("mouseover", (event, d) => {
             d3.select(event.currentTarget).attr("fill", "#ff7f0e");
             tooltip2.style("opacity", 1)
-              .html(`Year: ${d.year}<br>Number Added: ${d.count}<br>Type: ${d.type}`)
+              .html(`Year: ${d.year}<br>Number Added: ${d.count}<br>Content Type: ${d.type}`)
               .style("left", (event.pageX + 10) + "px")
               .style("top", (event.pageY + 10) + "px");
           })
